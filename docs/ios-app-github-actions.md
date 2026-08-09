@@ -9,6 +9,7 @@
 - 新增 Changelog
 - 修改 Java／Bedrock 位址、Port、版本與介紹
 - 指定或取消首頁跑馬燈
+- 發布成功後同步傳送到三個獨立的 Discord Webhook
 - 從最新消息、維護公告、更新紀錄中選擇並刪除
 - 所有危險刪除都有二次確認
 - 管理 Token 儲存在 iPhone Keychain
@@ -50,3 +51,13 @@ unsigned IPA 尚未經 Apple 簽名，無法直接點擊安裝。請用你自己
 4. 驗證成功後，Token 會保存在這台 iPhone 的 Keychain。
 
 若 Token 外洩，請執行 `wrangler secret put ADMIN_TOKEN` 更換，然後在 App 右上角登出並輸入新 Token。
+
+## Discord Webhook 通知
+
+在功能下拉選單選擇「Discord 通知設定」，分別貼上：
+
+1. 最新消息 Webhook URL
+2. 維護公告 Webhook URL
+3. 更新紀錄 Webhook URL
+
+儲存後，App 會先完成網站 API 寫入，成功後才呼叫對應的 Discord Webhook。任一欄留空就會停用該類通知。網址只存放在這台 iPhone 的 Keychain；Webhook URL 本身具有頻道發送權限，請勿分享或截圖公開。

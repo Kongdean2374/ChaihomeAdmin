@@ -59,6 +59,73 @@ struct SettingsForm: View {
     }
 }
 
+struct DiscordSettingsForm: View {
+    @EnvironmentObject private var model: AppModel
+    @State private var draft = DiscordWebhookSettings.empty
+
+    var body: some View {
+        Section {
+            Label {
+                Text("發布網站內容成功後，App 會把通知同步送到對應的 Discord 頻道。")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            } icon: {
+                Image(systemName: "bubble.left.and.bubble.right.fill")
+                    .foregroundStyle(Color.chaiSand)
+            }
+        }
+
+        Section("三種通知連結") {
+            webhookField(
+                title: "最新消息 Webhook",
+                description: "發布一般公告與最新消息時使用",
+                text: $draft.newsURL
+            )
+            webhookField(
+                title: "維護公告 Webhook",
+                description: "發布維護時間、原因與影響時使用",
+                text: $draft.maintenanceURL
+            )
+            webhookField(
+                title: "更新紀錄 Webhook",
+                description: "新增 Changelog 時使用",
+                text: $draft.changelogURL
+            )
+        }
+
+        Section {
+            PrimaryActionButton(
+                title: "儲存 Discord 設定",
+                symbol: "lock.shield.fill",
+                disabled: model.isBusy
+            ) {
+                model.saveDiscordSettings(draft)
+            }
+        } footer: {
+            Text("欄位留空就不發送該類通知。Webhook 含有頻道發送權限，只會儲存在這台 iPhone 的 Keychain。")
+        }
+        .onAppear { draft = model.webhookSettings }
+    }
+
+    private func webhookField(
+        title: String,
+        description: String,
+        text: Binding<String>
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+            SecureField("https://discord.com/api/webhooks/…", text: text)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .keyboardType(.URL)
+            Text(description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 3)
+    }
+}
 struct TickerForm: View {
     @EnvironmentObject private var model: AppModel
     @State private var selectedID = ""

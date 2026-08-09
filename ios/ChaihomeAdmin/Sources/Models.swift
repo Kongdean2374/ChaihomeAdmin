@@ -5,6 +5,7 @@ enum AdminFunction: String, CaseIterable, Identifiable {
     case maintenance
     case changelog
     case settings
+    case discord
     case ticker
     case delete
 
@@ -16,6 +17,7 @@ enum AdminFunction: String, CaseIterable, Identifiable {
         case .maintenance: "發布維護公告"
         case .changelog: "新增更新紀錄"
         case .settings: "修改伺服器設定"
+        case .discord: "Discord 通知設定"
         case .ticker: "管理首頁跑馬燈"
         case .delete: "刪除既有內容"
         }
@@ -27,6 +29,7 @@ enum AdminFunction: String, CaseIterable, Identifiable {
         case .maintenance: "填寫時間、原因、影響與維護項目"
         case .changelog: "保存新增、改善、調整與修復紀錄"
         case .settings: "修改版本、Java／Bedrock 位址與介紹"
+        case .discord: "設定三種內容各自使用的 Discord Webhook"
         case .ticker: "指定或取消首頁最上方的重要公告"
         case .delete: "從即時清單選擇內容並二次確認刪除"
         }
@@ -38,12 +41,27 @@ enum AdminFunction: String, CaseIterable, Identifiable {
         case .maintenance: "wrench.and.screwdriver"
         case .changelog: "clock.arrow.circlepath"
         case .settings: "slider.horizontal.3"
+        case .discord: "bubble.left.and.bubble.right.fill"
         case .ticker: "megaphone"
         case .delete: "trash"
         }
     }
 }
+struct DiscordWebhookSettings: Codable, Equatable {
+    var newsURL: String
+    var maintenanceURL: String
+    var changelogURL: String
 
+    static let empty = DiscordWebhookSettings(newsURL: "", maintenanceURL: "", changelogURL: "")
+
+    func url(for kind: ContentKind) -> String {
+        switch kind {
+        case .news: newsURL
+        case .maintenance: maintenanceURL
+        case .changelog: changelogURL
+        }
+    }
+}
 enum ContentKind: String, CaseIterable, Identifiable {
     case news
     case maintenance

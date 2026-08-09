@@ -57,6 +57,26 @@ Deno.test("public content falls back to bundled initial data", async () => {
   assertEquals(payload.data.settings.bedrockPort, 55550);
 });
 
+Deno.test("news sorting compares actual instants across timezone formats", async () => {
+  const env = await makeEnv();
+  const content = JSON.parse(await Deno.readTextFile(new URL("public/data/default-content.json", ROOT)));
+  content.news.push({
+    id: "news-timezone-test",
+    slug: "timezone-test",
+    title: "較新的公告",
+    publishedAt: "2026-08-09T03:49:34.753Z",
+    updatedAt: "2026-08-09T03:49:34.753Z",
+    category: "伺服器公告",
+    summary: "這篇公告的實際時間較新。",
+    content: "即使時間使用 Z 格式，也必須排在較舊的 +08:00 公告前面。",
+  });
+  await env.CONTENT.put("content:v1", JSON.stringify(content));
+
+  const response = await worker.fetch(new Request("https://play.chaihome.cc/api/public/news"), env);
+  const payload = await response.json();
+  assertEquals(payload.data[0].slug, "timezone-test");
+  assertEquals(payload.data[1].slug, "official-site-launch");
+});
 Deno.test("admin endpoints reject missing and incorrect bearer tokens", async () => {
   const env = await makeEnv();
   const missing = await worker.fetch(new Request("https://play.chaihome.cc/api/admin/settings"), env);

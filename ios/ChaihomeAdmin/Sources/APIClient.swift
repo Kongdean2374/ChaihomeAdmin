@@ -154,6 +154,7 @@ final class AppModel: ObservableObject {
     @Published private(set) var snapshot: Snapshot?
     @Published private(set) var isConfigured = false
     @Published private(set) var isBusy = false
+    @Published private(set) var webhookSettings = DiscordWebhookStore.load()
     @Published var presentedAlert: AppAlert?
 
     private var token = ""
@@ -199,20 +200,97 @@ final class AppModel: ObservableObject {
     }
 
     func publishNews(_ request: NewsCreateRequest) async -> Bool {
-        await mutate(success: "最新消息已發布") { client in
-            let _: NewsEntry = try await client.send("/api/admin/news", body: request)
+        var created: NewsEntry?
+        let published = await mutate(success: "最新消息已發布") { client in
+            created = try await client.send("/api/admin/news", body: request)
         }
+        guard published else { return false }
+        let slug = created?.slug.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        await sendDiscordIfConfigured(
+            kind: .news,
+            title: request.title,
+            description: "\(request.summary)\n\n\(request.content)",
+            articlePath: "/news/\(slug)",
+            color: 0x8CAA73,
+            websiteSuccess: "最新消息已發布"
+        )
+        return true
     }
 
     func publishMaintenance(_ request: MaintenanceCreateRequest) async -> Bool {
-        await mutate(success: "維護公告已發布") { client in
-            let _: MaintenanceEntry = try await client.send("/api/admin/maintenance", body: request)
+        var created: MaintenanceEntry?
+        let published = await mutate(success: "維護公告已發布") { client in
+            created = try await client.send("/api/admin/maintenance", body: request)
         }
+        guard published else { return false }
+        let slug = created?.slug.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        let items = request.items.map { "• \($0)" }.joined(separator: "\n")
+        let description = """
+        \(request.summary)
+
+        開始：\(request.startAt)
+        預計結束：\(request.endAt)
+        原因：\(request.reason)
+        玩家影響：\(request.impact)
+
+        維護項目：
+        \(items)
+
+        \(request.content)
+        """
+        await sendDiscordIfConfigured(
+            kind: .maintenance,
+            title: request.title,
+            description: description,
+            articlePath: "/maintenance/\(slug)",
+            color: 0xD29F5F,
+            websiteSuccess: "維護公告已發布"
+        )
+        return true
     }
 
     func publishChangelog(_ request: ChangelogCreateRequest) async -> Bool {
-        await mutate(success: "更新紀錄已新增") { client in
+        let published = await mutate(success: "更新紀錄已新增") { client in
             let _: ChangelogEntry = try await client.send("/api/admin/changelog", body: request)
+        }
+        guard published else { return false }
+        let sections = [
+            discordSection("新增", request.added),
+            discordSection("改善", request.improved),
+            discordSection("調整", request.adjusted),
+            discordSection("修復", request.fixed),
+            discordSection("移除", request.removed),
+            discordSection("技術性變更", request.technical),
+        ].filter { !$0.isEmpty }.joined(separator: "\n\n")
+        let version = request.version.isEmpty ? "" : "｜版本 \(request.version)"
+        await sendDiscordIfConfigured(
+            kind: .changelog,
+            title: request.title,
+            description: "日期：\(request.date)\(version)\n\n\(sections)",
+            articlePath: "/changelog",
+            color: 0xA990D8,
+            websiteSuccess: "更新紀錄已新增"
+        )
+        return true
+    }
+
+    func saveDiscordSettings(_ settings: DiscordWebhookSettings) {
+        let cleaned = DiscordWebhookSettings(
+            newsURL: settings.newsURL.trimmed,
+            maintenanceURL: settings.maintenanceURL.trimmed,
+            changelogURL: settings.changelogURL.trimmed
+        )
+        let values = [cleaned.newsURL, cleaned.maintenanceURL, cleaned.changelogURL]
+        guard values.allSatisfy({ DiscordWebhookClient.validate($0) }) else {
+            presentedAlert = AppAlert(title: "網址格式不正確", message: DiscordWebhookError.invalidURL.localizedDescription)
+            return
+        }
+        do {
+            try DiscordWebhookStore.save(cleaned)
+            webhookSettings = cleaned
+            presentedAlert = AppAlert(title: "已儲存", message: "三種 Discord Webhook 設定已安全存入這台 iPhone。")
+        } catch {
+            presentedAlert = AppAlert(title: "儲存失敗", message: error.localizedDescription)
         }
     }
 
@@ -242,6 +320,39 @@ final class AppModel: ObservableObject {
         }
     }
 
+    private func sendDiscordIfConfigured(
+        kind: ContentKind,
+        title: String,
+        description: String,
+        articlePath: String,
+        color: Int,
+        websiteSuccess: String
+    ) async {
+        let webhookURL = webhookSettings.url(for: kind).trimmed
+        guard !webhookURL.isEmpty else { return }
+        isBusy = true
+        defer { isBusy = false }
+        do {
+            try await DiscordWebhookClient().send(
+                webhookURL: webhookURL,
+                title: title,
+                description: description,
+                articleURL: "https://play.chaihome.cc\(articlePath)",
+                color: color
+            )
+            presentedAlert = AppAlert(title: "完成", message: "\(websiteSuccess)，Discord 通知也已送出。")
+        } catch {
+            presentedAlert = AppAlert(
+                title: "網站已更新，Discord 未送出",
+                message: "網站內容已成功儲存，但 Discord 通知失敗：\(error.localizedDescription)"
+            )
+        }
+    }
+
+    private func discordSection(_ title: String, _ items: [String]) -> String {
+        guard !items.isEmpty else { return "" }
+        return "**\(title)**\n" + items.map { "• \($0)" }.joined(separator: "\n")
+    }
     private func loadSnapshot(markConfigured: Bool, showSuccess: Bool) async {
         guard !token.isEmpty else { return }
         isBusy = true

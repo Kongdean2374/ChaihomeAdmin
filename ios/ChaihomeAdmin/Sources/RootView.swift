@@ -154,6 +154,7 @@ private struct AdminConsoleView: View {
         case .maintenance: MaintenanceForm()
         case .changelog: ChangelogForm()
         case .settings: SettingsForm()
+        case .discord: DiscordSettingsForm()
         case .ticker: TickerForm()
         case .delete: DeleteContentForm()
         }

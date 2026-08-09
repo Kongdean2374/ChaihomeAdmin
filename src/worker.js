@@ -527,7 +527,14 @@ function injectMetadata(html, metadata) {
 }
 
 function normalizePath(path) { return path !== "/" ? path.replace(/\/+$/, "") : path; }
-function sortedItems(items, field) { return [...items].sort((a, b) => String(b[field] || "").localeCompare(String(a[field] || ""))); }
+function sortedItems(items, field) {
+  return [...items].sort((a, b) => {
+    const aTime = Date.parse(String(a[field] || ""));
+    const bTime = Date.parse(String(b[field] || ""));
+    if (Number.isFinite(aTime) && Number.isFinite(bTime) && aTime !== bTime) return bTime - aTime;
+    return String(b[field] || "").localeCompare(String(a[field] || ""));
+  });
+}
 function escapeXml(value) { return String(value).replace(/[<>&'"]/g, (character) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" })[character]); }
 function escapeHtmlText(value) { return String(value).replace(/[&<>"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[character]); }
 

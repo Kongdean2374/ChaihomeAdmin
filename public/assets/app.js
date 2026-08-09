@@ -57,7 +57,14 @@ function formatDate(value, withTime = false) {
 }
 
 function sorted(items = [], field = "publishedAt") {
-  return [...items].sort((a, b) => String(b[field] || "").localeCompare(String(a[field] || "")));
+  return [...items].sort((a, b) => compareDatesDescending(a[field], b[field]));
+}
+
+function compareDatesDescending(a, b) {
+  const aTime = Date.parse(String(a || ""));
+  const bTime = Date.parse(String(b || ""));
+  if (Number.isFinite(aTime) && Number.isFinite(bTime) && aTime !== bTime) return bTime - aTime;
+  return String(b || "").localeCompare(String(a || ""));
 }
 
 function showToast(message) {
@@ -144,7 +151,7 @@ function homeTemplate() {
   const combined = [
     ...sorted(content.news).map((item) => ({ ...item, type: "news" })),
     ...sorted(content.maintenance).map((item) => ({ ...item, type: "maintenance" })),
-  ].sort((a, b) => String(b.publishedAt).localeCompare(String(a.publishedAt))).slice(0, 3);
+  ].sort((a, b) => compareDatesDescending(a.publishedAt, b.publishedAt)).slice(0, 3);
 
   const cards = combined.length
     ? combined.map(newsCard).join("")
