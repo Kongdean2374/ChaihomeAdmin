@@ -1,0 +1,24 @@
+name = "chaihome-website"
+main = "src/worker.js"
+compatibility_date = "2026-08-08"
+workers_dev = false
+preview_urls = false
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = true
+
+[[routes]]
+pattern = "play.chaihome.cc"
+custom_domain = true
+
+# 部署前執行 `wrangler kv namespace create CONTENT`，再將下方 id 換成輸出值。
+[[kv_namespaces]]
+binding = "CONTENT"
+id = "31c89a7468d74982b883f6c5d3301853"
+
+[vars]
+SITE_ORIGIN = "https://play.chaihome.cc"
+

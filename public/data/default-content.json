@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "settings": {
+    "serverName": "柴柴生存伺服器",
+    "brandName": "CHAIHOME",
+    "tagline": "一個入口，兩種生存。",
+    "subtitle": "Java × Bedrock 跨平台遊玩",
+    "javaAddress": "chaihome.cc",
+    "bedrockAddress": "bedrock.chaihe.cc",
+    "bedrockPort": 55550,
+    "serverVersion": "26.2",
+    "javaSupportedVersions": "1.9 ～ 26.2",
+    "javaRecommendedVersions": "1.21.11 ～ 26.2",
+    "bedrockRecommendedVersion": "最新版",
+    "pluginSurvivalIntro": "便利、輕鬆，但保留 Minecraft 的核心生存玩法。",
+    "vanillaSurvivalIntro": "減少便利功能，回到更加純粹的 Minecraft 生存體驗。",
+    "joinIntro": "從同一個入口加入，選擇你喜歡的生存節奏。"
+  },
+  "ticker": {
+    "enabled": true,
+    "type": "news",
+    "slug": "official-site-launch",
+    "summary": "柴柴生存伺服器官方網站正式上線"
+  },
+  "news": [
+    {
+      "id": "news-official-site-launch",
+      "slug": "official-site-launch",
+      "title": "柴柴生存伺服器官方網站正式上線",
+      "publishedAt": "2026-08-09T12:00:00+08:00",
+      "category": "站務公告",
+      "summary": "連線資訊、兩種生存玩法、維護公告與更新紀錄，現在都能在同一個地方找到。",
+      "content": "柴柴生存伺服器官方網站正式上線。\n\n你可以在這裡查看 Java 與 Bedrock 連線資訊、了解插件生存與原味生存的差異，也能隨時查閱最新消息、維護公告與更新紀錄。\n\n加入遊戲後，輸入 /switch 就能在兩個獨立的生存環境之間快速切換；世界、物品與進度互不相通，系統會記住你最後停留的伺服器。",
+      "updatedAt": "2026-08-09T12:00:00+08:00"
+    }
+  ],
+  "maintenance": [],
+  "changelog": [
+    {
+      "id": "changelog-2026-08-09-website",
+      "slug": "2026-08-09-website",
+      "date": "2026-08-09",
+      "version": "",
+      "title": "官方網站與內容系統建立",
+      "added": [
+        "新增柴柴生存伺服器官方網站",
+        "新增最新消息、維護公告與更新紀錄",
+        "新增 Java 與 Bedrock 一鍵複製連線資訊"
+      ],
+      "improved": [],
+      "adjusted": [],
+      "fixed": [],
+      "removed": [],
+      "technical": [
+        "建立 Cloudflare KV 內容管理架構",
+        "建立 iPhone 捷徑用安全管理 API"
+      ],
+      "publishedAt": "2026-08-09T12:00:00+08:00"
+    }
+  ],
+  "updatedAt": "2026-08-09T12:00:00+08:00"
+}

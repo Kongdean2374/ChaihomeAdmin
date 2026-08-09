@@ -1,0 +1,84 @@
+name: Build iOS Unsigned IPA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ios/ChaihomeAdmin/**"
+      - ".github/workflows/ios-unsigned-ipa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-unsigned-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build ChaihomeAdmin IPA
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show build environment
+        run: |
+          sw_vers
+          xcodebuild -version
+          xcode-select -p
+
+      - name: Install XcodeGen
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios/ChaihomeAdmin
+        run: |
+          xcodegen generate
+          xcodebuild -project ChaihomeAdmin.xcodeproj -list
+
+      - name: Build app without signing
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project ios/ChaihomeAdmin/ChaihomeAdmin.xcodeproj \
+            -scheme ChaihomeAdmin \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -derivedDataPath build/ios \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            build
+
+      - name: Package unsigned IPA
+        run: |
+          set -euo pipefail
+          APP_PATH="build/ios/Build/Products/Release-iphoneos/ChaihomeAdmin.app"
+          test -d "$APP_PATH"
+          rm -rf output
+          mkdir -p output/Payload
+          ditto "$APP_PATH" output/Payload/ChaihomeAdmin.app
+          cd output
+          zip -qry ChaihomeAdmin-unsigned.ipa Payload
+          test -s ChaihomeAdmin-unsigned.ipa
+          unzip -l ChaihomeAdmin-unsigned.ipa | grep -q "Payload/ChaihomeAdmin.app/Info.plist"
+          shasum -a 256 ChaihomeAdmin-unsigned.ipa
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChaihomeAdmin-unsigned-IPA
+          path: output/ChaihomeAdmin-unsigned.ipa
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+

@@ -1,0 +1,16 @@
+{
+  "name": "chaihome-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "柴柴生存伺服器官方網站與 Cloudflare KV 內容管理 API",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "deno test --allow-read test/worker.test.js",
+    "lint": "deno lint src public/assets test"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
+

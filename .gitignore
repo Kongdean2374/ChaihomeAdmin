@@ -1,0 +1,15 @@
+node_modules/
+.wrangler/
+.dev.vars
+.env
+dist/
+*.log
+
+# iOS / Xcode generated files
+ios/**/build/
+ios/**/*.xcodeproj/
+DerivedData/
+*.xcarchive
+*.ipa
+output/
+.DS_Store

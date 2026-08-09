@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#101410">
+    <meta name="color-scheme" content="dark">
+    <title>柴柴生存伺服器｜一個入口，兩種生存</title>
+    <meta name="description" content="柴柴生存伺服器官方網站。Java 與 Bedrock 跨平台遊玩，在插件生存與原味生存之間自由切換。">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://play.chaihome.cc/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_TW">
+    <meta property="og:site_name" content="柴柴生存伺服器">
+    <meta property="og:title" content="柴柴生存伺服器｜一個入口，兩種生存">
+    <meta property="og:description" content="Java × Bedrock 跨平台遊玩，在插件生存與原味生存之間自由切換。">
+    <meta property="og:url" content="https://play.chaihome.cc/">
+    <meta name="twitter:card" content="summary">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/assets/styles.css?v=20260809-7">
+    <script src="/assets/app.js?v=20260809-7" type="module"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳至主要內容</a>
+
+    <header class="site-header" data-header>
+      <nav class="navbar shell" aria-label="主要導覽">
+        <a class="brand" href="/" data-link aria-label="柴柴生存伺服器首頁">
+          <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+            <path d="M7 12 13 5l7 4 7-4 6 7v17l-6 6H13l-6-6Z"/>
+            <path class="brand-mark-face" d="M13 17h4v4h-4zm10 0h4v4h-4zm-6 8h6v4h-6z"/>
+          </svg>
+          <span class="brand-copy"><strong>CHAIHOME</strong><small>柴柴生存伺服器</small></span>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="開啟選單" data-menu-toggle>
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-panel" id="site-menu" data-menu>
+          <div class="nav-panel-head"><span>網站選單</span><small>探索柴柴生存伺服器</small></div>
+          <div class="nav-links">
+            <a href="/" data-link>首頁</a>
+            <a href="/server" data-link>伺服器介紹</a>
+            <a href="/news" data-link>最新消息</a>
+            <a href="/maintenance" data-link>維護公告</a>
+            <a href="/changelog" data-link>更新紀錄</a>
+            <a href="/contact" data-link>聯絡我們</a>
+
+          </div>
+          <a class="button button-small button-primary nav-join" href="/join" data-link>立即加入</a>
+        </div>
+      </nav>
+    </header>
+
+    <div class="announcement" data-announcement hidden>
+      <a class="announcement-link shell" href="/news" data-announcement-link data-link>
+        <span class="announcement-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 13v-2l10-4v10L4 13Zm10-4 4-2v10l-4-2M7 14l1.5 5h3L10 13.8"/></svg>
+        </span>
+        <span class="announcement-label">最新公告</span>
+        <span class="announcement-viewport"><span class="announcement-text" data-announcement-text></span></span>
+        <span class="announcement-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <main id="main-content" tabindex="-1">
+      <div class="route-loading shell" data-loading role="status">
+        <span class="loading-block loading-title"></span>
+        <span class="loading-block loading-line"></span>
+        <span class="loading-block loading-line short"></span>
+        <span class="sr-only">正在載入網站內容</span>
+      </div>
+      <div data-app hidden></div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <a class="brand footer-brand" href="/" data-link>
+            <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+              <path d="M7 12 13 5l7 4 7-4 6 7v17l-6 6H13l-6-6Z"/>
+              <path class="brand-mark-face" d="M13 17h4v4h-4zm10 0h4v4h-4zm-6 8h6v4h-6z"/>
+            </svg>
+            <span class="brand-copy"><strong>CHAIHOME</strong><small>一個入口，兩種生存。</small></span>
+          </a>
+          <p class="footer-note">Minecraft Java 與 Bedrock 跨平台生存伺服器。</p>
+        </div>
+        <div class="footer-links">
+          <div><strong>探索</strong><a href="/server" data-link>伺服器介紹</a><a href="/join" data-link>加入遊戲</a></div>
+          <div><strong>資訊</strong><a href="/news" data-link>最新消息</a><a href="/maintenance" data-link>維護公告</a><a href="/changelog" data-link>更新紀錄</a>
+            <a href="/contact" data-link>聯絡我們</a></div>
+        </div>
+      </div>
+      <div class="shell footer-bottom">
+        <span>© <span data-year></span> 柴柴生存伺服器</span>
+        <span>非 Mojang Studios 或 Microsoft 官方網站</span>
+      </div>
+    </footer>
+
+    <div class="toast" role="status" aria-live="polite" aria-atomic="true" data-toast></div>
+    <noscript><p class="noscript">此網站需要 JavaScript 才能顯示動態公告與內容。</p></noscript>
+  </body>
+</html>
