@@ -243,7 +243,7 @@ function homeTemplate() {
 function newsCard(item) {
   const isMaintenance = item.type === "maintenance";
   const href = `/${isMaintenance ? "maintenance" : "news"}/${encodeURIComponent(item.slug)}`;
-  return `<a class="news-card reveal" href="${href}" data-link><time class="date" datetime="${escapeAttr(item.publishedAt)}">${formatDate(item.publishedAt)}</time><div class="news-card-main"><span class="tag ${isMaintenance ? "tag-maintenance" : ""}">${icon(isMaintenance ? "wrench" : "news", "tag-icon")}${escapeHtml(isMaintenance ? "維護" : item.category || "最新消息")}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p></div><span class="card-foot">看內容 <span aria-hidden="true">→</span></span></a>`;
+  return `<a class="news-card record-panel reveal" href="${href}" data-link><div class="record-meta"><time class="date" datetime="${escapeAttr(item.publishedAt)}">${formatDate(item.publishedAt)}</time><span class="tag ${isMaintenance ? "tag-maintenance" : ""}">${icon(isMaintenance ? "wrench" : "news", "tag-icon")}${escapeHtml(isMaintenance ? "維護" : item.category || "最新消息")}</span></div><div class="news-card-main"><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p></div><span class="card-foot">看內容 <span aria-hidden="true">→</span></span></a>`;
 }
 
 function serverTemplate() {
@@ -300,7 +300,7 @@ function maintenanceListTemplate() {
 
 function listCard(item, type) {
   const maintenance = type === "maintenance";
-  return `<a class="list-card reveal" href="/${type}/${encodeURIComponent(item.slug)}" data-link><time class="date" datetime="${escapeAttr(item.publishedAt)}">${formatDate(item.publishedAt, maintenance)}</time><div class="list-card-main"><span class="tag ${maintenance ? "tag-maintenance" : ""}">${icon(maintenance ? "wrench" : "news", "tag-icon")}${escapeHtml(maintenance ? "維護" : item.category || "最新消息")}</span><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.summary)}</p></div><span class="list-arrow" aria-hidden="true">→</span></a>`;
+  return `<a class="list-card record-panel reveal" href="/${type}/${encodeURIComponent(item.slug)}" data-link><div class="record-meta"><time class="date" datetime="${escapeAttr(item.publishedAt)}">${formatDate(item.publishedAt, maintenance)}</time><span class="tag ${maintenance ? "tag-maintenance" : ""}">${icon(maintenance ? "wrench" : "news", "tag-icon")}${escapeHtml(maintenance ? "維護" : item.category || "最新消息")}</span></div><div class="list-card-main"><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.summary)}</p></div><span class="list-arrow" aria-hidden="true">→</span></a>`;
 }
 
 function emptyState(title, description, spansGrid = false) {
@@ -363,7 +363,7 @@ function changelogEntry(item) {
     ["修復", "fixed", "fixed"], ["移除", "removed", "removed"], ["技術性變更", "technical", "technical"],
   ];
   const markup = groups.filter(([, key]) => Array.isArray(item[key]) && item[key].length).map(([label, key, className]) => `<section class="change-group ${className}"><h3>${label}</h3><ul>${listMarkup(item[key])}</ul></section>`).join("");
-  return `<article class="timeline-entry reveal"><div class="timeline-date"><strong>${formatDate(`${item.date}T00:00:00+08:00`)}</strong>${item.version ? `<span class="tag">v${escapeHtml(item.version)}</span>` : ""}</div><div class="timeline-card"><h2>${escapeHtml(item.title || "伺服器更新")}</h2>${markup || "<p class=\"section-copy\">本次更新沒有分類項目。</p>"}</div></article>`;
+  return `<article class="timeline-entry record-panel reveal"><header class="timeline-head"><div class="timeline-date"><time datetime="${escapeAttr(item.date)}">${formatDate(`${item.date}T00:00:00+08:00`)}</time>${item.version ? `<span class="tag">v${escapeHtml(item.version)}</span>` : ""}</div><h2>${escapeHtml(item.title || "伺服器更新")}</h2></header><div class="timeline-card">${markup || "<p class=\"section-copy\">本次更新沒有分類項目。</p>"}</div></article>`;
 }
 
 function joinTemplate() {
