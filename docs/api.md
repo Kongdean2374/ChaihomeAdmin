@@ -119,7 +119,7 @@ Content-Type: application/json
   "added": ["新增伺服器資訊顯示"],
   "improved": ["提升 Bedrock 相容性"],
   "adjusted": [],
-  "fixed": ["修復 /switch 偶爾切換失敗"],
+  "fixed": ["修復 HUD 偶爾顯示異常"],
   "removed": [],
   "technical": ["更新 Paper 核心"]
 }
@@ -140,7 +140,7 @@ Content-Type: application/json
 }
 ```
 
-可修改欄位：`serverName`、`brandName`、`tagline`、`subtitle`、`javaAddress`、`bedrockAddress`、`bedrockPort`、`serverVersion`、`javaSupportedVersions`、`javaRecommendedVersions`、`bedrockRecommendedVersion`、`pluginSurvivalIntro`、`vanillaSurvivalIntro`、`joinIntro`。
+可修改欄位：`serverName`、`brandName`、`tagline`、`subtitle`、`javaAddress`、`bedrockAddress`、`bedrockPort`、`serverVersion`、`javaSupportedVersions`、`javaRecommendedVersions`、`bedrockRecommendedVersion`、`pluginSurvivalIntro`、`joinIntro`。
 
 ## 跑馬燈
 

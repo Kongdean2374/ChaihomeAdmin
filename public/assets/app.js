@@ -15,8 +15,6 @@ const ICON_PATHS = Object.freeze({
   java: '<path d="M8 3c0 2 2 2 2 4M12 2c0 2 2 2 2 4"/><path d="M5 9h12v4a6 6 0 0 1-12 0Z"/><path d="M17 10h1a3 3 0 0 1 0 6h-2"/>',
   bedrock: '<path d="m12 2 4 2.3v4.6l-4 2.3-4-2.3V4.3Z"/><path d="m5.5 12 4 2.3v4.6l-4 2.3-4-2.3v-4.6Z"/><path d="m18.5 12 4 2.3v4.6l-4 2.3-4-2.3v-4.6Z"/>',
   pickaxe: '<path d="m14 4-10 10M7 11l6 6"/><path d="M12 4h7l2 2-6 3Z"/>',
-  sprout: '<path d="M12 21v-8"/><path d="M7 4c3.5 0 5 2 5 5-3.5 0-5-2-5-5ZM17 7c-3.5 0-5 2-5 5 3.5 0 5-2 5-5Z"/>',
-  switch: '<path d="M7 7h11l-3-3M17 17H6l3 3"/><path d="m18 7-3 3M6 17l3-3"/>',
   devices: '<rect x="3" y="4" width="13" height="10" rx="2"/><path d="M8 20h3M9.5 14v6"/><rect x="17" y="8" width="4" height="9" rx="1"/>',
   version: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   profile: '<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2.5"/><path d="M5.5 17c.8-2.2 2-3 3.5-3s2.7.8 3.5 3M15 9h3M15 13h3"/>',
@@ -120,7 +118,7 @@ function normalizePath(pathname) {
 }
 
 function updateMeta(title, description, path = location.pathname, type = "website") {
-  const fullTitle = title === "柴柴生存伺服器" ? `${title}｜一個入口，兩種生存` : `${title}｜柴柴生存伺服器`;
+  const fullTitle = title === "柴柴生存伺服器" ? `${title}｜熟悉的生存，多一點便利` : `${title}｜柴柴生存伺服器`;
   document.title = fullTitle;
   const url = new URL(path, location.origin).href;
   const fields = [
@@ -163,37 +161,29 @@ function homeTemplate() {
         <div class="hero-copy reveal">
           <span class="eyebrow">Minecraft Survival Server</span>
           <h1 class="hero-title">${escapeHtml(settings.serverName)}<span class="soft">${escapeHtml(settings.tagline)}</span></h1>
-          <p class="hero-subtitle">${escapeHtml(settings.subtitle)}。從同一個入口加入，在兩個獨立的生存世界之間選擇你的節奏。</p>
+          <p class="hero-subtitle">${escapeHtml(settings.subtitle)}。熟悉的 Minecraft 生存，多一點便利與保護。</p>
           <div class="hero-actions">
             <a class="button button-primary" href="/join" data-link>立即加入 ${ARROW_ICON}</a>
             <a class="button button-secondary" href="/server" data-link>了解伺服器</a>
           </div>
-          <div class="hero-facts"><span><i></i>Java ${escapeHtml(settings.javaSupportedVersions)}</span><span><i></i>Bedrock 最新版</span><span><i></i>輸入 /switch 自由切換</span></div>
+          <div class="hero-facts"><span><i></i>Java ${escapeHtml(settings.javaSupportedVersions)}</span><span><i></i>Bedrock 最新版</span><span><i></i>長期生存・自由發展</span></div>
         </div>
         <aside class="hero-dashboard reveal" aria-label="伺服器連線摘要">
           <div class="dashboard-top"><span class="dashboard-status"><i></i>Ready to join</span><span class="dashboard-version">v${escapeHtml(settings.serverVersion)}</span></div>
-          <div class="dashboard-brand"><span class="dashboard-mark">${icon("server")}</span><div><small>${escapeHtml(settings.serverName)}</small><strong>一個入口，兩種生存</strong></div></div>
+          <div class="dashboard-brand"><span class="dashboard-mark">${icon("server")}</span><div><small>${escapeHtml(settings.serverName)}</small><strong>${escapeHtml(settings.tagline)}</strong></div></div>
           <div class="dashboard-editions">
             <div class="dashboard-edition">${icon("java")}<div><span>Java Edition</span><strong>${escapeHtml(settings.javaAddress)}</strong></div></div>
             <div class="dashboard-edition bedrock">${icon("bedrock")}<div><span>Bedrock Edition</span><strong>${escapeHtml(settings.bedrockAddress)}</strong></div></div>
           </div>
-          <div class="dashboard-bottom">${icon("switch")}<span>遊戲內輸入 <strong>/switch</strong> 自由切換</span></div>
+          <div class="dashboard-bottom">${icon("shield")}<span>便利功能不改變 Minecraft 生存核心</span></div>
         </aside>
       </div>
     </section>
 
-    <section class="home-section shell" id="survival-modes">
-      <div class="section-heading reveal"><div><span class="eyebrow">Two Ways to Survive</span><h2 class="section-title">你想怎麼生存？</h2><p class="section-copy">便利與純粹，不必二選一。兩個世界各自獨立，隨時切換。</p></div></div>
-      <div class="survival-grid">
-        <article class="survival-card reveal"><div><div class="mode-card-top"><span class="survival-icon">${icon("pickaxe")}</span><span class="mode-number">01</span></div><h3>插件生存</h3><p>${escapeHtml(settings.pluginSurvivalIntro)}</p></div><ul class="feature-chips"><li>連鎖挖礦</li><li>連鎖砍樹</li><li>防噴保護</li><li>一人睡覺</li><li>HUD 資訊</li><li>複製機支援</li></ul></article>
-        <article class="survival-card vanilla reveal"><div><div class="mode-card-top"><span class="survival-icon">${icon("sprout")}</span><span class="mode-number">02</span></div><h3>原味生存</h3><p>${escapeHtml(settings.vanillaSurvivalIntro)}</p></div><ul class="feature-chips"><li>原版採集節奏</li><li>正常掉落規則</li><li>正常爆炸規則</li><li>多人睡眠</li><li>基本資訊</li><li>必要管理保護</li></ul></article>
-      </div>
-    </section>
-
-    <section class="switch-section">
-      <div class="switch-grid shell">
-        <div class="switch-copy reveal"><div><span class="eyebrow">Quick Switch</span><h2 class="section-title">一個入口，<br>自由切換。</h2></div><p class="section-copy">不必離開遊戲，也不用重新輸入 IP。輸入 <strong>/switch</strong> 就能前往另一個生存伺服器。系統會記住你最後停留的位置。</p><button class="button button-secondary" type="button" data-copy="/switch">${COPY_ICON} 複製 /switch</button></div>
-        <div class="switch-visual reveal" aria-label="插件生存與原味生存可透過 switch 指令雙向切換"><span class="switch-line"></span><div class="switch-node"><strong><span class="node-icon">${icon("pickaxe")}</span>插件生存</strong><span>便利・輕鬆</span></div><button class="switch-command" type="button" data-copy="/switch" aria-label="複製 switch 指令">/switch</button><div class="switch-node"><strong><span class="node-icon">${icon("sprout")}</span>原味生存</strong><span>純粹・原味</span></div></div>
+    <section class="home-section shell" id="survival">
+      <div class="section-heading reveal"><div><span class="eyebrow">Survival, Refined</span><h2 class="section-title">熟悉的生存，<br>更順手的體驗。</h2><p class="section-copy">自己採集、建造、探索與發展，搭配適量便利功能，減少重複操作與意外損失。</p></div></div>
+      <div class="survival-grid single-mode">
+        <article class="survival-card single reveal"><div><div class="mode-card-top"><span class="survival-icon">${icon("pickaxe")}</span><span class="mode-number">SURVIVAL</span></div><h3>柴柴生存</h3><p>${escapeHtml(settings.pluginSurvivalIntro)}</p></div><ul class="feature-chips"><li>連鎖挖礦</li><li>連鎖砍樹</li><li>防噴保護</li><li>防爆保護</li><li>一人睡覺</li><li>HUD 資訊</li><li>延遲與 TPS</li><li>AFK 保護</li><li>地毯複製機</li><li>TNT 複製機</li></ul></article>
       </div>
     </section>
 
@@ -215,51 +205,32 @@ function newsCard(item) {
 
 function serverTemplate() {
   const settings = content.settings;
-  const comparisonRows = [
-    ["採集方式", "支援連鎖挖礦與連鎖砍樹，減少重複操作", "維持原版逐格挖掘與砍伐節奏"],
-    ["死亡掉落", "提供防噴保護，降低意外死亡的損失", "依照原版規則掉落物品"],
-    ["爆炸規則", "提供防爆保護，減少地形與建築受損", "保留原版爆炸與地形影響"],
-    ["跳過夜晚", "一位玩家睡覺即可跳過夜晚", "需正常符合多人睡眠條件"],
-    ["複製機", "支援地毯複製機與 TNT 複製機", "不支援地毯與 TNT 複製機"],
-    ["資訊顯示", "HUD、延遲、TPS 與伺服器資訊", "只保留基本資訊顯示"],
-    ["AFK 與管理", "保留 AFK 保護與必要管理功能", "同樣保留 AFK 保護與必要管理功能"],
-  ];
-  const comparison = comparisonRows.map(([name, plugin, vanilla]) => `<div class="compare-row"><strong>${escapeHtml(name)}</strong><div class="compare-value positive"><em>插件生存</em>${escapeHtml(plugin)}</div><div class="compare-value"><em>原味生存</em>${escapeHtml(vanilla)}</div></div>`).join("");
-
-  return `${pageHero("About the Server", "兩種生存，同一個入口。", "這裡不是 RPG、模組包或高度魔改伺服器；核心始終是 Minecraft 生存，只是讓你選擇便利一點，或純粹一點。")}
+  return `${pageHero("About the Server", "Minecraft 生存，加入適量便利。", "這裡不是 RPG、模組包或高度魔改伺服器。從採集、建造到探索與發展，核心始終是熟悉的 Minecraft 生存。")}
     <section class="page-content shell">
       <div class="server-overview-grid">
-        <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("shield")}</span><span>Survival</span></div><strong>兩個獨立<br>生存世界</strong></article>
+        <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("pickaxe")}</span><span>Survival</span></div><strong>Minecraft<br>核心生存</strong></article>
         <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("devices")}</span><span>Cross-play</span></div><strong>Java × Bedrock<br>跨平台加入</strong></article>
-        <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("switch")}</span><span>Quick Switch</span></div><strong>輸入 /switch<br>立即切換</strong></article>
+        <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("shield")}</span><span>Protection</span></div><strong>遊玩保護<br>降低意外損失</strong></article>
         <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("version")}</span><span>Version</span></div><strong>目前版本<br>${escapeHtml(settings.serverVersion)}</strong></article>
       </div>
 
-      <div class="intro-grid">
-        <article class="intro-card reveal"><span class="tag">${icon("pickaxe", "tag-icon")}Minecraft 生存 + 適量便利</span><h2>插件生存</h2><p>${escapeHtml(settings.pluginSurvivalIntro)} 適合希望減少重複勞動與意外損失，但仍想自己採集、建造、探索與發展的玩家。</p><ul class="feature-list">${listMarkup(["連鎖挖礦與連鎖砍樹，加快大量採集", "防噴保護與防爆保護，降低意外損失", "一人睡覺即可跳過夜晚", "支援地毯複製機與 TNT 複製機", "HUD、延遲、TPS 與伺服器資訊", "AFK 保護與不破壞核心玩法的趣味插件"])}</ul></article>
-        <article class="intro-card reveal"><span class="tag">${icon("sprout", "tag-icon")}接近 Minecraft 原版體驗</span><h2>原味生存</h2><p>${escapeHtml(settings.vanillaSurvivalIntro)} 適合喜歡原版資源取得、風險與多人節奏，不希望便利功能直接改變生存玩法的玩家。</p><ul class="feature-list">${listMarkup(["沒有連鎖挖礦與連鎖砍樹", "沒有防噴保護與防爆保護", "需符合正常多人睡眠條件", "不支援地毯複製機與 TNT 複製機", "保留基本資訊顯示與 AFK 保護", "只保留伺服器穩定運作所需的管理功能"])}</ul></article>
+      <div class="intro-grid single-mode">
+        <article class="intro-card reveal"><span class="tag">${icon("pickaxe", "tag-icon")}Minecraft 生存 + 適量便利</span><h2>柴柴生存</h2><p>${escapeHtml(settings.pluginSurvivalIntro)} 你仍然需要自己取得資源、建立基地、探索世界並一步步發展；插件只負責讓操作更順手、遊玩成果更有保障。</p><ul class="feature-list">${listMarkup(["連鎖挖礦與連鎖砍樹，減少大量採集時的重複操作", "防噴保護與防爆保護，降低死亡與爆炸造成的意外損失", "一位玩家睡覺即可跳過夜晚，適合多人伺服器節奏", "支援地毯複製機與 TNT 複製機", "HUD、延遲、TPS 與伺服器資訊顯示", "AFK 保護與伺服器必要管理功能", "加入不破壞主要生存體驗的趣味插件", "Java 與 Bedrock 玩家可以一起遊玩"])}</ul></article>
       </div>
 
-      <div class="independent-note reveal"><span class="note-mark">${icon("switch")}</span><div><strong>世界、物品與進度完全獨立</strong><p>在插件生存取得的物品不會帶到原味生存，兩邊的建築、背包與發展進度也不會互相同步。你可以把它們當成兩段各自完整的生存旅程。</p></div></div>
-
-      <section class="detail-section" aria-labelledby="mode-comparison-title">
-        <div class="section-heading reveal"><div><span class="eyebrow">Detailed Comparison</span><h2 class="section-title" id="mode-comparison-title">兩種玩法，差在哪裡？</h2><p class="section-copy">差異集中在便利與原版規則；兩邊都保留生存核心、AFK 保護及伺服器必要管理功能。</p></div></div>
-        <div class="mode-comparison reveal"><div class="compare-row compare-head"><span>功能／規則</span><span>插件生存</span><span>原味生存</span></div>${comparison}</div>
-      </section>
-
       <section class="detail-section" aria-labelledby="principles-title">
-        <div class="section-heading reveal"><div><span class="eyebrow">Core Principles</span><h2 class="section-title" id="principles-title">不變的三件事</h2></div></div>
+        <div class="section-heading reveal"><div><span class="eyebrow">Core Experience</span><h2 class="section-title" id="principles-title">生存核心不變</h2><p class="section-copy">便利功能改善的是操作與保護，不會把伺服器變成 RPG、模組服或跳過發展過程的玩法。</p></div></div>
         <div class="principle-grid">
-          <article class="principle-card reveal"><span>01</span><h3>仍然是 Minecraft 生存</h3><p>插件生存不是 RPG、模組服或魔改玩法；便利功能只用來改善操作與保護遊戲成果。</p></article>
-          <article class="principle-card reveal"><span>02</span><h3>兩邊資料不互通</h3><p>世界、物品與進度各自保存。切換玩法不會覆蓋另一邊的生存紀錄。</p></article>
-          <article class="principle-card reveal"><span>03</span><h3>記住最後停留位置</h3><p>系統會記住你最後停留的伺服器，下次加入時不必重新選擇。</p></article>
+          <article class="principle-card reveal"><span>01</span><h3>自己發展</h3><p>資源、裝備、建築與探索成果仍需由玩家親自累積，保留完整的生存成就感。</p></article>
+          <article class="principle-card reveal"><span>02</span><h3>適量便利</h3><p>連鎖採集、一人睡覺與資訊顯示讓日常操作更順暢，不取代生存本身。</p></article>
+          <article class="principle-card reveal"><span>03</span><h3>安心遊玩</h3><p>防噴、防爆與 AFK 保護減少非預期損失，同時保留伺服器穩定所需的管理功能。</p></article>
         </div>
       </section>
 
-      <div class="switch-grid no-bottom-space"><div class="switch-copy reveal"><span class="eyebrow">How It Works</span><h2 class="section-title">不換 IP，<br>只換一種玩法。</h2><p class="section-copy">從同一個入口加入，不需要離開遊戲或重新輸入位址。想換個生存節奏時，直接在聊天欄輸入 <strong>/switch</strong>。</p><button class="button button-secondary" type="button" data-copy="/switch">${COPY_ICON} 複製 /switch</button></div><div class="switch-visual reveal" aria-label="插件生存與原味生存可透過 switch 指令切換"><span class="switch-line"></span><div class="switch-node"><strong><span class="node-icon">${icon("pickaxe")}</span>插件生存</strong><span>獨立世界與進度</span></div><button class="switch-command" type="button" data-copy="/switch">/switch</button><div class="switch-node"><strong><span class="node-icon">${icon("sprout")}</span>原味生存</strong><span>獨立世界與進度</span></div></div></div>
+      <div class="independent-note reveal"><span class="note-mark">${icon("shield")}</span><div><strong>專注長期生存體驗</strong><p>這是一個適合持續採集、建造與發展的生存環境。你可以依照自己的節奏遊玩，享受多人世界中的合作、探索與創造。</p></div></div>
 
       <section class="detail-section" aria-labelledby="crossplay-title">
-        <div class="section-heading reveal"><div><span class="eyebrow">Cross Platform</span><h2 class="section-title" id="crossplay-title">Java 與 Bedrock 都能加入</h2><p class="section-copy">電腦、手機、平板與支援的遊戲主機玩家，都能使用對應版本的連線資訊進入同一套伺服器入口。</p></div></div>
+        <div class="section-heading reveal"><div><span class="eyebrow">Cross Platform</span><h2 class="section-title" id="crossplay-title">Java 與 Bedrock 都能加入</h2><p class="section-copy">電腦、手機、平板與支援的遊戲主機玩家，都能使用對應版本的連線資訊加入伺服器。</p></div></div>
         <div class="edition-strip">
           <article class="edition-detail reveal"><div><span class="edition-detail-icon">${icon("java")}</span><span class="tag">Java Edition</span><h3>Java 版</h3><p>支援 ${escapeHtml(settings.javaSupportedVersions)}，建議使用 ${escapeHtml(settings.javaRecommendedVersions)}。</p></div><div class="edition-address"><code>${escapeHtml(settings.javaAddress)}</code><button class="copy-button" type="button" data-copy="${escapeAttr(settings.javaAddress)}">${COPY_ICON}<span>複製 IP</span></button></div></article>
           <article class="edition-detail bedrock reveal"><div><span class="edition-detail-icon">${icon("bedrock")}</span><span class="tag">Bedrock Edition</span><h3>基岩版</h3><p>建議使用${escapeHtml(settings.bedrockRecommendedVersion)}，連線 Port 為 ${escapeHtml(settings.bedrockPort)}。</p></div><div class="edition-address"><code>${escapeHtml(settings.bedrockAddress)}</code><button class="copy-button" type="button" data-copy="${escapeAttr(settings.bedrockAddress)}">${COPY_ICON}<span>複製 IP</span></button></div></article>
@@ -269,6 +240,7 @@ function serverTemplate() {
       <div class="independent-note contact-note reveal"><span class="note-mark">${icon("help")}</span><div><strong>還有問題或需要聯絡管理者？</strong><p>如果你遇到連線、版本或玩法問題，可以到聯絡頁查看建議聯絡方式與 Discord 入口。</p><a class="button button-secondary" href="/contact" data-link>查看聯絡方式 ${ARROW_ICON}</a></div></div>
     </section>`;
 }
+
 function newsListTemplate() {
   const items = sorted(content.news);
   const list = items.length ? items.map((item) => listCard(item, "news")).join("") : emptyState("還沒有最新消息", "新消息發布後會出現在這裡。");
@@ -360,7 +332,7 @@ function joinTemplate() {
         <article class="join-card bedrock reveal"><div class="join-card-heading"><span class="join-edition-icon">${icon("bedrock")}</span><div><span class="tag">Bedrock Edition</span><h2>基岩版</h2><p class="edition-note">手機、平板、Windows 與遊戲主機玩家</p></div></div><div class="connection-fields">${copyField("伺服器位址", settings.bedrockAddress, "複製 IP")}${copyField("Port", settings.bedrockPort, "複製 Port")}<div class="version-grid"><div class="version-item"><span>建議版本</span><strong>${escapeHtml(settings.bedrockRecommendedVersion)}</strong></div><div class="version-item"><span>連接埠</span><strong>${escapeHtml(settings.bedrockPort)}</strong></div></div></div></article>
       </div>
       <div class="section-heading spaced-heading reveal"><div><span class="eyebrow">Three Steps</span><h2 class="section-title">很快就能加入</h2></div></div>
-      <div class="join-steps"><article class="step-card reveal"><span class="step-number">01</span><h3>新增伺服器</h3><p>在 Minecraft 多人遊戲頁面選擇新增伺服器。</p></article><article class="step-card reveal"><span class="step-number">02</span><h3>貼上連線資訊</h3><p>複製上方對應版本的 IP；Bedrock 版也要填入 Port。</p></article><article class="step-card reveal"><span class="step-number">03</span><h3>自由切換</h3><p>進入後輸入 /switch，即可在插件生存與原味生存之間切換。</p></article></div>
+      <div class="join-steps"><article class="step-card reveal"><span class="step-number">01</span><h3>新增伺服器</h3><p>在 Minecraft 多人遊戲頁面選擇新增伺服器。</p></article><article class="step-card reveal"><span class="step-number">02</span><h3>貼上連線資訊</h3><p>複製上方對應版本的 IP；Bedrock 版也要填入 Port。</p></article><article class="step-card reveal"><span class="step-number">03</span><h3>開始生存</h3><p>完成連線後即可開始採集、建造、探索，依照自己的節奏發展。</p></article></div>
     </section>`;
 }
 
@@ -375,7 +347,7 @@ function contactTemplate() {
 
       <div class="contact-guide reveal">
         <div><span class="eyebrow">Before Contacting</span><h2>回報問題時，附上這些資訊會更好處理</h2></div>
-        <ul class="contact-checklist"><li>你使用 Java 還是 Bedrock Edition</li><li>Minecraft 版本與發生問題的時間</li><li>當時位於插件生存或原味生存</li><li>畫面上的錯誤訊息，必要時附上截圖</li></ul>
+        <ul class="contact-checklist"><li>你使用 Java 還是 Bedrock Edition</li><li>Minecraft 版本與發生問題的時間</li><li>當時所在區域與正在進行的操作</li><li>畫面上的錯誤訊息，必要時附上截圖</li></ul>
       </div>
     </section>`;
 }
@@ -392,9 +364,9 @@ function renderRoute({ focus = false } = {}) {
   let articleType = "website";
 
   if (path === "/") {
-    template = homeTemplate(); title = "柴柴生存伺服器"; description = "Java × Bedrock 跨平台遊玩，在插件生存與原味生存之間自由切換。";
+    template = homeTemplate(); title = "柴柴生存伺服器"; description = "Java × Bedrock 跨平台遊玩，保留 Minecraft 生存核心並加入適量便利功能。";
   } else if (path === "/server") {
-    template = serverTemplate(); title = "伺服器介紹"; description = "完整了解插件生存與原味生存的功能差異、獨立進度、跨平台支援與 /switch 切換方式。";
+    template = serverTemplate(); title = "伺服器介紹"; description = "了解柴柴生存伺服器的便利功能、遊玩保護、跨平台支援與完整生存體驗。";
   } else if (path === "/news") {
     template = newsListTemplate(); title = "最新消息"; description = "查看柴柴生存伺服器的最新消息與重要通知。";
   } else if (root === "news" && slug) {

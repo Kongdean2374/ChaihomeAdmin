@@ -54,9 +54,21 @@ Deno.test("public content falls back to bundled initial data", async () => {
   assertEquals(response.status, 200);
   assert(payload.ok);
   assertEquals(payload.data.settings.javaAddress, "chaihome.cc");
-  assertEquals(payload.data.settings.bedrockPort, 55550);
+  assertEquals(payload.data.settings.bedrockAddress, "bedrock.chaihome.cc");
+  assertEquals(payload.data.settings.bedrockPort, 55500);
+  assertEquals("vanillaSurvivalIntro" in payload.data.settings, false);
 });
 
+Deno.test("public UI contains no retired mode references", async () => {
+  const sources = await Promise.all([
+    "public/index.html",
+    "public/assets/app.js",
+    "public/data/default-content.json",
+  ].map((path) => Deno.readTextFile(new URL(path, ROOT))));
+  for (const source of sources) {
+    assert(!/原味生存|兩種生存|\/switch/.test(source), "Retired mode copy must not appear in the public website");
+  }
+});
 Deno.test("news sorting compares actual instants across timezone formats", async () => {
   const env = await makeEnv();
   const content = JSON.parse(await Deno.readTextFile(new URL("public/data/default-content.json", ROOT)));

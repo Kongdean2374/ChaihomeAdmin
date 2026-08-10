@@ -33,8 +33,7 @@ struct SettingsForm: View {
         }
 
         Section("玩法介紹") {
-            MultilineInput(title: "插件生存簡介", hint: "插件生存的定位與特色", text: $draft.pluginSurvivalIntro)
-            MultilineInput(title: "原味生存簡介", hint: "原味生存的定位與特色", text: $draft.vanillaSurvivalIntro)
+            MultilineInput(title: "生存玩法簡介", hint: "伺服器生存玩法的定位與特色", text: $draft.pluginSurvivalIntro)
         }
 
         Section {

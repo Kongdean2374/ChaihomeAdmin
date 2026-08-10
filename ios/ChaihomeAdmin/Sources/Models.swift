@@ -113,7 +113,6 @@ struct ServerSettings: Codable, Equatable {
     var javaRecommendedVersions: String
     var bedrockRecommendedVersion: String
     var pluginSurvivalIntro: String
-    var vanillaSurvivalIntro: String
     var joinIntro: String
 
     static let empty = ServerSettings(
@@ -129,7 +128,6 @@ struct ServerSettings: Codable, Equatable {
         javaRecommendedVersions: "",
         bedrockRecommendedVersion: "",
         pluginSurvivalIntro: "",
-        vanillaSurvivalIntro: "",
         joinIntro: ""
     )
 }

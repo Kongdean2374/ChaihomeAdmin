@@ -201,7 +201,7 @@ async function updateSettings(env, requestUrl, input) {
     serverName: [2, 60], brandName: [2, 30], tagline: [2, 80], subtitle: [2, 100],
     javaAddress: [3, 253], bedrockAddress: [3, 253], serverVersion: [1, 30],
     javaSupportedVersions: [1, 60], javaRecommendedVersions: [1, 60], bedrockRecommendedVersion: [1, 60],
-    pluginSurvivalIntro: [5, 300], vanillaSurvivalIntro: [5, 300], joinIntro: [5, 300],
+    pluginSurvivalIntro: [5, 300], joinIntro: [5, 300],
   };
   const patch = {};
   for (const [key, limits] of Object.entries(allowed)) {
@@ -497,15 +497,15 @@ async function sitemapResponse(request, env) {
 function findMetadata(path, content, env) {
   const origin = env.SITE_ORIGIN || "https://play.chaihome.cc";
   const pages = {
-    "/": ["柴柴生存伺服器｜一個入口，兩種生存", "Java × Bedrock 跨平台遊玩，在插件生存與原味生存之間自由切換。"],
-    "/server": ["伺服器介紹｜柴柴生存伺服器", "完整了解兩種生存的功能差異、獨立進度、跨平台支援與 /switch 切換方式。"],
+    "/": ["柴柴生存伺服器｜熟悉的生存，多一點便利", "Java × Bedrock 跨平台遊玩，保留 Minecraft 生存核心並加入適量便利功能。"],
+    "/server": ["伺服器介紹｜柴柴生存伺服器", "了解柴柴生存伺服器的便利功能、遊玩保護、跨平台支援與完整生存體驗。"],
     "/news": ["最新消息｜柴柴生存伺服器", "查看柴柴生存伺服器的最新消息與重要通知。"],
     "/maintenance": ["維護公告｜柴柴生存伺服器", "查看預定維護、影響範圍與完成結果。"],
     "/changelog": ["更新紀錄｜柴柴生存伺服器", "永久保存新功能、改善、調整與修復紀錄。"],
     "/join": ["加入遊戲｜柴柴生存伺服器", `Java ${content.settings.javaAddress}；Bedrock ${content.settings.bedrockAddress}:${content.settings.bedrockPort}。`],
     "/contact": ["聯絡我們｜柴柴生存伺服器", "查看建議聯絡方式、Discord 伺服器與電子郵件。"],
   };
-  let [title, description] = pages[path] || ["柴柴生存伺服器", "一個入口，兩種生存。"];
+  let [title, description] = pages[path] || ["柴柴生存伺服器", "熟悉的生存，多一點便利。"];
   let type = "website";
   const match = path.match(/^\/(news|maintenance)\/([^/]+)$/);
   if (match) {

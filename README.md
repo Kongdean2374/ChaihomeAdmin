@@ -30,8 +30,8 @@ Cloudflare KV（CONTENT binding）
 
 ## 主要頁面
 
-- `/`：首頁、最新公告跑馬燈、兩種生存、`/switch` 與最近消息
-- `/server`：插件生存與原味生存完整介紹
+- `/`：首頁、最新公告跑馬燈、生存特色、跨平台資訊與最近消息
+- `/server`：柴柴生存玩法、便利功能與跨平台支援介紹
 - `/news`、`/news/:slug`：最新消息與文章
 - `/maintenance`、`/maintenance/:slug`：維護公告與文章
 - `/changelog`：更新紀錄 Timeline

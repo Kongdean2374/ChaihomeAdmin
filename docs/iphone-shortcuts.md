@@ -136,7 +136,7 @@
 
 ## 流程四：修改伺服器設定
 
-1. 「從選單中選擇」，選項：伺服器版本、Java IP、Java 支援版本、Java 建議版本、Bedrock IP、Bedrock Port、Bedrock 建議版本、首頁標語、插件生存簡介、原味生存簡介。
+1. 「從選單中選擇」，選項：伺服器版本、Java IP、Java 支援版本、Java 建議版本、Bedrock IP、Bedrock Port、Bedrock 建議版本、首頁標語、生存玩法簡介。
 2. 每個分支都用「詢問輸入」取得新值。
 3. 每個分支建立一個「字典」，只放該欄位：
    - 伺服器版本 → `serverVersion`
@@ -147,8 +147,7 @@
    - Bedrock Port → `bedrockPort`，值類型選數字
    - Bedrock 建議版本 → `bedrockRecommendedVersion`
    - 首頁標語 → `tagline`
-   - 插件生存簡介 → `pluginSurvivalIntro`
-   - 原味生存簡介 → `vanillaSurvivalIntro`
+   - 生存玩法簡介 → `pluginSurvivalIntro`
 4. 把各分支字典輸出都命名為 `設定變更`。
 5. 分支結束後，URL 設為 `API_BASE` + `/api/admin/settings`。
 6. 「取得 URL 內容」Method 選 `PATCH`，三個共用 Header，Request Body 選 JSON。若捷徑允許直接把字典設為 JSON Body，就插入 `設定變更`；否則在每個選單分支各自放一個 PATCH，JSON 只放該欄位。
