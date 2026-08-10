@@ -10,6 +10,30 @@ const announcementText = document.querySelector("[data-announcement-text]");
 
 const COPY_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>`;
 const ARROW_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>`;
+const VOXEL_SCENE = `<div class="hero-world" aria-hidden="true">
+  <span class="voxel-sun"></span>
+  <div class="hero-pixels"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <svg class="voxel-landscape" viewBox="0 0 720 520" role="presentation">
+    <defs>
+      <g id="voxel-cube">
+        <path class="voxel-top" d="M0 24 40 0l40 24-40 24Z"/>
+        <path class="voxel-left" d="M0 24 40 48v46L0 70Z"/>
+        <path class="voxel-right" d="m80 24-40 24v46l40-24Z"/>
+      </g>
+    </defs>
+    <path class="voxel-grid" d="m70 434 250-150 330 190M116 462l250-150m-196 177 250-150m-196 177 250-150m-304-52 330 190m-276-223 330 190m-276-223 330 190"/>
+    <use href="#voxel-cube" class="terrain-block grass block-1" transform="translate(72 338) scale(1.08)"/>
+    <use href="#voxel-cube" class="terrain-block grass block-2" transform="translate(158 290) scale(1.08)"/>
+    <use href="#voxel-cube" class="terrain-block stone block-3" transform="translate(244 338) scale(1.08)"/>
+    <use href="#voxel-cube" class="terrain-block grass block-4" transform="translate(330 242) scale(1.08)"/>
+    <use href="#voxel-cube" class="terrain-block earth block-5" transform="translate(416 290) scale(1.08)"/>
+    <use href="#voxel-cube" class="terrain-block grass block-6" transform="translate(502 338) scale(1.08)"/>
+    <use href="#voxel-cube" class="terrain-block stone block-7" transform="translate(330 146) scale(1.08)"/>
+    <use href="#voxel-cube" class="terrain-block light block-8" transform="translate(416 194) scale(1.08)"/>
+    <use href="#voxel-cube" class="terrain-block earth block-9" transform="translate(244 242) scale(1.08)"/>
+  </svg>
+  <span class="voxel-coordinates">X +184&nbsp;&nbsp; Z -72</span>
+</div>`;
 const ICON_PATHS = Object.freeze({
   server: '<rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01M11 7h6M11 17h6"/>',
   java: '<path d="M8 3c0 2 2 2 2 4M12 2c0 2 2 2 2 4"/><path d="M5 9h12v4a6 6 0 0 1-12 0Z"/><path d="M17 10h1a3 3 0 0 1 0 6h-2"/>',
@@ -133,7 +157,7 @@ function updateMeta(title, description, path = location.pathname, type = "websit
 }
 
 function pageHero(eyebrow, title, description) {
-  return `<section class="page-hero"><div class="shell reveal"><span class="eyebrow">${escapeHtml(eyebrow)}</span><h1 class="display-title">${escapeHtml(title)}</h1><p class="section-copy">${escapeHtml(description)}</p></div></section>`;
+  return `<section class="page-hero"><div class="page-hero-inner shell reveal"><span class="page-index">${escapeHtml(eyebrow)}</span><div><h1 class="display-title">${escapeHtml(title)}</h1><p class="section-copy">${escapeHtml(description)}</p></div></div></section>`;
 }
 
 function copyField(label, value, buttonLabel = "複製") {
@@ -153,59 +177,76 @@ function homeTemplate() {
 
   const cards = combined.length
     ? combined.map(newsCard).join("")
-    : emptyState("目前沒有新消息", "有重要資訊時，我們會在這裡告訴你。", true);
+    : emptyState("目前沒有新消息", "有重要資訊時，我會在這裡告訴你。", true);
+
+  const features = [
+    ["01", "pickaxe", "採集少一點重複", "連鎖挖礦與連鎖砍樹，讓大量採集更順手。"],
+    ["02", "shield", "成果多一點保障", "防噴、防爆與 AFK 保護，降低非預期損失。"],
+    ["03", "version", "資訊直接看得到", "HUD、延遲、TPS 與伺服器資訊都能快速確認。"],
+    ["04", "devices", "保留熟悉的玩法", "一人睡覺，並支援地毯與 TNT 複製機；生存核心不變。"],
+  ].map(([number, iconName, title, description]) => `<article class="feature-row reveal"><span class="feature-number">${number}</span><span class="feature-icon">${icon(iconName)}</span><div><h3>${title}</h3><p>${description}</p></div></article>`).join("");
 
   return `
     <section class="hero">
+      ${VOXEL_SCENE}
       <div class="hero-shell shell">
         <div class="hero-copy reveal">
-          <span class="eyebrow">Minecraft Survival Server</span>
-          <h1 class="hero-title">${escapeHtml(settings.serverName)}<span class="soft">${escapeHtml(settings.tagline)}</span></h1>
-          <p class="hero-subtitle">${escapeHtml(settings.subtitle)}。熟悉的 Minecraft 生存，多一點便利與保護。</p>
+          <span class="hero-index">CHAIHOME · TAIWAN MINECRAFT SERVER</span>
+          <h1 class="hero-title"><span>${escapeHtml(settings.serverName)}</span><em>${escapeHtml(settings.tagline)}</em></h1>
+          <p class="hero-subtitle">${escapeHtml(settings.subtitle)}。自己採集、建造、探索與發展，插件只把麻煩的地方整理得更順手。</p>
           <div class="hero-actions">
-            <a class="button button-primary" href="/join" data-link>立即加入 ${ARROW_ICON}</a>
-            <a class="button button-secondary" href="/server" data-link>了解伺服器</a>
+            <a class="button button-primary" href="/join" data-link>查看加入方式 ${ARROW_ICON}</a>
+            <a class="text-link hero-about" href="/server" data-link>先看看玩法 <span aria-hidden="true">→</span></a>
           </div>
-          <div class="hero-facts"><span><i></i>Java ${escapeHtml(settings.javaSupportedVersions)}</span><span><i></i>Bedrock 最新版</span><span><i></i>長期生存・自由發展</span></div>
+          <div class="hero-notes"><span>版本 ${escapeHtml(settings.serverVersion)}</span><span>Java ${escapeHtml(settings.javaSupportedVersions)}</span><span>Bedrock ${escapeHtml(settings.bedrockRecommendedVersion)}</span></div>
         </div>
-        <aside class="hero-dashboard reveal" aria-label="伺服器連線摘要">
-          <div class="dashboard-top"><span class="dashboard-status"><i></i>Ready to join</span><span class="dashboard-version">v${escapeHtml(settings.serverVersion)}</span></div>
-          <div class="dashboard-brand"><span class="dashboard-mark">${icon("server")}</span><div><small>${escapeHtml(settings.serverName)}</small><strong>${escapeHtml(settings.tagline)}</strong></div></div>
-          <div class="dashboard-editions">
-            <div class="dashboard-edition">${icon("java")}<div><span>Java Edition</span><strong>${escapeHtml(settings.javaAddress)}</strong></div></div>
-            <div class="dashboard-edition bedrock">${icon("bedrock")}<div><span>Bedrock Edition</span><strong>${escapeHtml(settings.bedrockAddress)}</strong></div></div>
+        <aside class="join-board reveal" aria-label="伺服器連線資料">
+          <div class="join-board-head"><strong>連線資料</strong><span>點一下即可複製</span></div>
+          <div class="join-board-row">
+            <div class="join-board-edition"><span>${icon("java")}</span><div><small>電腦版</small><strong>Java Edition</strong></div></div>
+            <div class="join-board-address"><code>${escapeHtml(settings.javaAddress)}</code><button type="button" data-copy="${escapeAttr(settings.javaAddress)}">複製</button></div>
           </div>
-          <div class="dashboard-bottom">${icon("shield")}<span>便利功能不改變 Minecraft 生存核心</span></div>
+          <div class="join-board-row">
+            <div class="join-board-edition"><span>${icon("bedrock")}</span><div><small>手機・平板・主機</small><strong>Bedrock Edition</strong></div></div>
+            <div class="join-board-address"><code>${escapeHtml(settings.bedrockAddress)}</code><button type="button" data-copy="${escapeAttr(settings.bedrockAddress)}">複製</button></div>
+            <p class="join-board-port">Port <strong>${escapeHtml(settings.bedrockPort)}</strong></p>
+          </div>
+          <div class="join-board-foot"><span>JAVA × BEDROCK</span><p>兩個版本的玩家都可以加入同一個生存世界。</p></div>
         </aside>
       </div>
+      <div class="hero-rule shell" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
     </section>
 
     <section class="home-section shell" id="survival">
-      <div class="section-heading reveal"><div><span class="eyebrow">Survival, Refined</span><h2 class="section-title">熟悉的生存，<br>更順手的體驗。</h2><p class="section-copy">自己採集、建造、探索與發展，搭配適量便利功能，減少重複操作與意外損失。</p></div></div>
-      <div class="survival-grid single-mode">
-        <article class="survival-card single reveal"><div><div class="mode-card-top"><span class="survival-icon">${icon("pickaxe")}</span><span class="mode-number">SURVIVAL</span></div><h3>柴柴生存</h3><p>${escapeHtml(settings.pluginSurvivalIntro)}</p></div><ul class="feature-chips"><li>連鎖挖礦</li><li>連鎖砍樹</li><li>防噴保護</li><li>防爆保護</li><li>一人睡覺</li><li>HUD 資訊</li><li>延遲與 TPS</li><li>AFK 保護</li><li>地毯複製機</li><li>TNT 複製機</li></ul></article>
+      <header class="editorial-heading reveal"><span class="section-number">01</span><div><span class="section-label">伺服器玩法</span><h2 class="section-title">玩的就是生存。<br>只是日常更順手。</h2></div><p class="section-copy">${escapeHtml(settings.pluginSurvivalIntro)} 你依然要自己取得資源、蓋基地、探索世界；便利功能不會替你跳過過程。</p></header>
+      <div class="feature-ledger">${features}</div>
+    </section>
+
+    <section class="home-section edition-section shell">
+      <header class="editorial-heading reveal"><span class="section-number">02</span><div><span class="section-label">跨平台加入</span><h2 class="section-title">你習慣哪個版本，<br>就用哪個版本進來。</h2></div><p class="section-copy">Java 與 Bedrock 玩家都能加入。連線位址、Port 與建議版本整理在加入頁，不需要看一大段教學。</p></header>
+      <div class="edition-ledger reveal">
+        <div class="edition-row"><span class="edition-row-icon">${icon("java")}</span><strong>Java Edition</strong><span>建議 ${escapeHtml(settings.javaRecommendedVersions)}</span><code>${escapeHtml(settings.javaAddress)}</code></div>
+        <div class="edition-row"><span class="edition-row-icon">${icon("bedrock")}</span><strong>Bedrock Edition</strong><span>建議${escapeHtml(settings.bedrockRecommendedVersion)}</span><code>${escapeHtml(settings.bedrockAddress)}:${escapeHtml(settings.bedrockPort)}</code></div>
       </div>
+      <a class="plain-cta reveal" href="/join" data-link><span>查看完整加入方法</span><span aria-hidden="true">↗</span></a>
     </section>
 
-    <section class="home-section compact shell">
-      <div class="platform-panel reveal"><div class="platform-copy"><span class="eyebrow">Cross Platform</span><h2 class="section-title">Java × Bedrock</h2><p class="section-copy">無論你習慣電腦上的 Java Edition，還是手機、平板與主機上的 Bedrock Edition，都能一起加入柴柴生存伺服器。</p><a class="text-link" href="/join" data-link>查看連線方式 <span aria-hidden="true">→</span></a></div><div class="platform-pair"><div class="platform-card"><span class="edition-monogram">${icon("java")}</span><strong>Java Edition</strong><span>${escapeHtml(settings.javaRecommendedVersions)} 建議</span></div><div class="platform-card"><span class="edition-monogram">${icon("bedrock")}</span><strong>Bedrock Edition</strong><span>${escapeHtml(settings.bedrockRecommendedVersion)}建議</span></div></div></div>
-    </section>
-
-    <section class="home-section shell">
-      <div class="section-heading reveal"><div><span class="eyebrow">Latest Updates</span><h2 class="section-title">最近發生的事</h2></div><a class="text-link" href="/news" data-link>查看所有消息 <span aria-hidden="true">→</span></a></div>
+    <section class="home-section news-index-section shell">
+      <header class="editorial-heading reveal"><span class="section-number">03</span><div><span class="section-label">伺服器近況</span><h2 class="section-title">最近發生的事</h2></div><p class="section-copy">公告、功能調整與維護資訊會依發布時間保留。最新一筆永遠排在最前面。</p></header>
       <div class="latest-grid">${cards}</div>
+      <a class="plain-cta reveal" href="/news" data-link><span>查看所有消息</span><span aria-hidden="true">↗</span></a>
     </section>`;
 }
 
 function newsCard(item) {
   const isMaintenance = item.type === "maintenance";
   const href = `/${isMaintenance ? "maintenance" : "news"}/${encodeURIComponent(item.slug)}`;
-  return `<a class="news-card reveal" href="${href}" data-link><div><div class="article-meta"><span class="tag ${isMaintenance ? "tag-maintenance" : ""}">${icon(isMaintenance ? "wrench" : "news", "tag-icon")}${escapeHtml(isMaintenance ? "維護" : item.category || "最新消息")}</span><time class="date" datetime="${escapeAttr(item.publishedAt)}">${formatDate(item.publishedAt)}</time></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p></div><span class="card-foot">閱讀完整內容 <span aria-hidden="true">→</span></span></a>`;
+  return `<a class="news-card reveal" href="${href}" data-link><time class="date" datetime="${escapeAttr(item.publishedAt)}">${formatDate(item.publishedAt)}</time><div class="news-card-main"><span class="tag ${isMaintenance ? "tag-maintenance" : ""}">${icon(isMaintenance ? "wrench" : "news", "tag-icon")}${escapeHtml(isMaintenance ? "維護" : item.category || "最新消息")}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p></div><span class="card-foot">閱讀 <span aria-hidden="true">→</span></span></a>`;
 }
 
 function serverTemplate() {
   const settings = content.settings;
-  return `${pageHero("About the Server", "Minecraft 生存，加入適量便利。", "這裡不是 RPG、模組包或高度魔改伺服器。從採集、建造到探索與發展，核心始終是熟悉的 Minecraft 生存。")}
+  return `${pageHero("SERVER / 伺服器介紹", "Minecraft 生存，加入適量便利。", "這裡不是 RPG、模組包或高度魔改伺服器。從採集、建造到探索與發展，核心始終是熟悉的 Minecraft 生存。")}
     <section class="page-content shell">
       <div class="server-overview-grid">
         <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("pickaxe")}</span><span>Survival</span></div><strong>Minecraft<br>核心生存</strong></article>
@@ -219,7 +260,7 @@ function serverTemplate() {
       </div>
 
       <section class="detail-section" aria-labelledby="principles-title">
-        <div class="section-heading reveal"><div><span class="eyebrow">Core Experience</span><h2 class="section-title" id="principles-title">生存核心不變</h2><p class="section-copy">便利功能改善的是操作與保護，不會把伺服器變成 RPG、模組服或跳過發展過程的玩法。</p></div></div>
+        <div class="section-heading reveal"><div><span class="eyebrow">03 / 生存原則</span><h2 class="section-title" id="principles-title">生存核心不變</h2><p class="section-copy">便利功能改善的是操作與保護，不會把伺服器變成 RPG、模組服或跳過發展過程的玩法。</p></div></div>
         <div class="principle-grid">
           <article class="principle-card reveal"><span>01</span><h3>自己發展</h3><p>資源、裝備、建築與探索成果仍需由玩家親自累積，保留完整的生存成就感。</p></article>
           <article class="principle-card reveal"><span>02</span><h3>適量便利</h3><p>連鎖採集、一人睡覺與資訊顯示讓日常操作更順暢，不取代生存本身。</p></article>
@@ -230,7 +271,7 @@ function serverTemplate() {
       <div class="independent-note reveal"><span class="note-mark">${icon("shield")}</span><div><strong>專注長期生存體驗</strong><p>這是一個適合持續採集、建造與發展的生存環境。你可以依照自己的節奏遊玩，享受多人世界中的合作、探索與創造。</p></div></div>
 
       <section class="detail-section" aria-labelledby="crossplay-title">
-        <div class="section-heading reveal"><div><span class="eyebrow">Cross Platform</span><h2 class="section-title" id="crossplay-title">Java 與 Bedrock 都能加入</h2><p class="section-copy">電腦、手機、平板與支援的遊戲主機玩家，都能使用對應版本的連線資訊加入伺服器。</p></div></div>
+        <div class="section-heading reveal"><div><span class="eyebrow">04 / 跨平台</span><h2 class="section-title" id="crossplay-title">Java 與 Bedrock 都能加入</h2><p class="section-copy">電腦、手機、平板與支援的遊戲主機玩家，都能使用對應版本的連線資訊加入伺服器。</p></div></div>
         <div class="edition-strip">
           <article class="edition-detail reveal"><div><span class="edition-detail-icon">${icon("java")}</span><span class="tag">Java Edition</span><h3>Java 版</h3><p>支援 ${escapeHtml(settings.javaSupportedVersions)}，建議使用 ${escapeHtml(settings.javaRecommendedVersions)}。</p></div><div class="edition-address"><code>${escapeHtml(settings.javaAddress)}</code><button class="copy-button" type="button" data-copy="${escapeAttr(settings.javaAddress)}">${COPY_ICON}<span>複製 IP</span></button></div></article>
           <article class="edition-detail bedrock reveal"><div><span class="edition-detail-icon">${icon("bedrock")}</span><span class="tag">Bedrock Edition</span><h3>基岩版</h3><p>建議使用${escapeHtml(settings.bedrockRecommendedVersion)}，連線 Port 為 ${escapeHtml(settings.bedrockPort)}。</p></div><div class="edition-address"><code>${escapeHtml(settings.bedrockAddress)}</code><button class="copy-button" type="button" data-copy="${escapeAttr(settings.bedrockAddress)}">${COPY_ICON}<span>複製 IP</span></button></div></article>
@@ -244,14 +285,14 @@ function serverTemplate() {
 function newsListTemplate() {
   const items = sorted(content.news);
   const list = items.length ? items.map((item) => listCard(item, "news")).join("") : emptyState("還沒有最新消息", "新消息發布後會出現在這裡。");
-  return `${pageHero("News", "最新消息", "伺服器消息、玩法資訊與重要通知都會永久保留在這裡。")}
+  return `${pageHero("NEWS / 最新消息", "最新消息", "伺服器消息、玩法資訊與重要通知都會永久保留在這裡。")}
     <section class="page-content shell"><div class="content-list">${list}</div></section>`;
 }
 
 function maintenanceListTemplate() {
   const items = sorted(content.maintenance);
   const list = items.length ? items.map((item) => listCard(item, "maintenance")).join("") : emptyState("目前沒有維護公告", "預定維護與完成結果會集中顯示在這裡。");
-  return `${pageHero("Maintenance", "維護公告", "維護時間、原因、影響範圍與完成結果，都會在這裡清楚說明。")}
+  return `${pageHero("MAINTENANCE / 維護", "維護公告", "維護時間、原因、影響範圍與完成結果，都會在這裡清楚說明。")}
     <section class="page-content shell"><div class="content-list">${list}</div></section>`;
 }
 
@@ -310,7 +351,7 @@ function renderRichText(value) {
 function changelogTemplate() {
   const items = sorted(content.changelog, "date");
   const timeline = items.length ? `<div class="timeline">${items.map(changelogEntry).join("")}</div>` : emptyState("還沒有更新紀錄", "新的伺服器變更會持續保留在這裡。");
-  return `${pageHero("Changelog", "更新紀錄", "從新功能到問題修復，每一次調整都有跡可循。")}
+  return `${pageHero("CHANGELOG / 更新", "更新紀錄", "從新功能到問題修復，每一次調整都有跡可循。")}
     <section class="page-content shell">${timeline}</section>`;
 }
 
@@ -325,19 +366,19 @@ function changelogEntry(item) {
 
 function joinTemplate() {
   const settings = content.settings;
-  return `${pageHero("Join the Server", "選擇你的版本，開始生存。", settings.joinIntro)}
+  return `${pageHero("JOIN / 加入遊戲", "選擇你的版本，開始生存。", settings.joinIntro)}
     <section class="page-content shell">
       <div class="join-selector">
         <article class="join-card reveal"><div class="join-card-heading"><span class="join-edition-icon">${icon("java")}</span><div><span class="tag">Java Edition</span><h2>Java 版</h2><p class="edition-note">Minecraft 電腦版玩家</p></div></div><div class="connection-fields">${copyField("伺服器位址", settings.javaAddress, "複製 IP")}<div class="version-grid"><div class="version-item"><span>支援版本</span><strong>${escapeHtml(settings.javaSupportedVersions)}</strong></div><div class="version-item"><span>建議版本</span><strong>${escapeHtml(settings.javaRecommendedVersions)}</strong></div></div></div></article>
         <article class="join-card bedrock reveal"><div class="join-card-heading"><span class="join-edition-icon">${icon("bedrock")}</span><div><span class="tag">Bedrock Edition</span><h2>基岩版</h2><p class="edition-note">手機、平板、Windows 與遊戲主機玩家</p></div></div><div class="connection-fields">${copyField("伺服器位址", settings.bedrockAddress, "複製 IP")}${copyField("Port", settings.bedrockPort, "複製 Port")}<div class="version-grid"><div class="version-item"><span>建議版本</span><strong>${escapeHtml(settings.bedrockRecommendedVersion)}</strong></div><div class="version-item"><span>連接埠</span><strong>${escapeHtml(settings.bedrockPort)}</strong></div></div></div></article>
       </div>
-      <div class="section-heading spaced-heading reveal"><div><span class="eyebrow">Three Steps</span><h2 class="section-title">很快就能加入</h2></div></div>
+      <div class="section-heading spaced-heading reveal"><div><span class="eyebrow">加入方法</span><h2 class="section-title">很快就能加入</h2></div></div>
       <div class="join-steps"><article class="step-card reveal"><span class="step-number">01</span><h3>新增伺服器</h3><p>在 Minecraft 多人遊戲頁面選擇新增伺服器。</p></article><article class="step-card reveal"><span class="step-number">02</span><h3>貼上連線資訊</h3><p>複製上方對應版本的 IP；Bedrock 版也要填入 Port。</p></article><article class="step-card reveal"><span class="step-number">03</span><h3>開始生存</h3><p>完成連線後即可開始採集、建造、探索，依照自己的節奏發展。</p></article></div>
     </section>`;
 }
 
 function contactTemplate() {
-  return `${pageHero("Contact", "需要幫忙？從這裡找到我。", "伺服器問題、加入協助或其他聯繫，建議先使用個人自介頁中的聯絡方式；也可以加入 Discord 與玩家交流。")}
+  return `${pageHero("CONTACT / 聯絡", "需要幫忙？從這裡找到我。", "伺服器問題、加入協助或其他聯繫，建議先使用個人自介頁中的聯絡方式；也可以加入 Discord 與玩家交流。")}
     <section class="page-content shell">
       <div class="contact-grid">
         <article class="contact-card contact-primary reveal"><div><span class="tag">建議聯絡方式</span><span class="contact-icon">${icon("profile")}</span><h2>個人自介與聯絡入口</h2><p>我的自我介紹頁整理了目前較常使用的聯絡方式。若希望較快收到回覆，建議優先從這裡找到我。</p></div><a class="button button-primary" href="https://me.chaihome.cc" target="_blank" rel="noreferrer">前往 me.chaihome.cc ${ARROW_ICON}</a></article>
@@ -346,7 +387,7 @@ function contactTemplate() {
       </div>
 
       <div class="contact-guide reveal">
-        <div><span class="eyebrow">Before Contacting</span><h2>回報問題時，附上這些資訊會更好處理</h2></div>
+        <div><span class="eyebrow">聯絡前準備</span><h2>回報問題時，附上這些資訊會更好處理</h2></div>
         <ul class="contact-checklist"><li>你使用 Java 還是 Bedrock Edition</li><li>Minecraft 版本與發生問題的時間</li><li>當時所在區域與正在進行的操作</li><li>畫面上的錯誤訊息，必要時附上截圖</li></ul>
       </div>
     </section>`;
@@ -390,6 +431,7 @@ function renderRoute({ focus = false } = {}) {
   updateMeta(title, description, path, articleType);
   updateNavigation(path);
   activateReveal();
+  activateHeroInteraction();
   closeMenu();
   if (focus) {
     globalThis.scrollTo({ top: 0, behavior: "instant" });
@@ -421,6 +463,28 @@ function activateReveal() {
     else revealObserver.observe(element);
   });
   setTimeout(() => document.querySelectorAll(".reveal:not(.is-visible)").forEach((element) => element.classList.add("is-visible")), 1200);
+}
+
+function activateHeroInteraction() {
+  const hero = app.querySelector(".hero");
+  if (!hero || matchMedia("(prefers-reduced-motion: reduce)").matches || matchMedia("(pointer: coarse)").matches) return;
+
+  let currentLook = "";
+  hero.addEventListener("pointermove", (event) => {
+    const bounds = hero.getBoundingClientRect();
+    const horizontal = event.clientX < bounds.left + bounds.width / 2 ? "left" : "right";
+    const vertical = event.clientY < bounds.top + bounds.height / 2 ? "up" : "down";
+    const nextLook = `${vertical}-${horizontal}`;
+    if (nextLook !== currentLook) {
+      hero.dataset.look = nextLook;
+      currentLook = nextLook;
+    }
+  }, { passive: true });
+
+  hero.addEventListener("pointerleave", () => {
+    delete hero.dataset.look;
+    currentLook = "";
+  });
 }
 
 function updateAnnouncement() {
