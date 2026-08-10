@@ -133,8 +133,9 @@ async function loadContent() {
     const response = await fetch("/data/default-content.json");
     if (!response.ok) throw new Error("無法載入網站內容");
     const payload = await response.json();
-    if (!payload.ok || !payload.data) throw new Error("公開內容 API 格式不正確");
-    return payload.data;
+    const bundled = payload.data || payload;
+    if (!bundled.settings) throw new Error("內建內容資料格式不正確");
+    return bundled;
   }
 }
 
@@ -200,7 +201,7 @@ function homeTemplate() {
             <a class="button button-primary" href="/join" data-link>加入伺服器 ${ARROW_ICON}</a>
             <a class="text-link hero-about" href="/server" data-link>先看看裡面有什麼 <span aria-hidden="true">→</span></a>
           </div>
-          <div class="hero-notes"><span>版本 ${escapeHtml(settings.serverVersion)}</span><span>Java ${escapeHtml(settings.javaSupportedVersions)}</span><span>Bedrock ${escapeHtml(settings.bedrockRecommendedVersion)}</span></div><p class="owner-note"><strong>第一次來？</strong> 先去加入頁複製 IP 就好，不用把所有公告看完才進來。</p>
+          <div class="hero-notes"><span class="hero-version-note">世界版本 Java ${escapeHtml(settings.serverVersion)}</span><span>Java 支援 ${escapeHtml(settings.javaSupportedVersions)}</span><span>Bedrock 可加入</span></div><p class="owner-note"><strong>第一次來？</strong> 先去加入頁複製 IP 就好，不用把所有公告看完才進來。</p>
         </div>
         <aside class="join-board reveal" aria-label="伺服器連線資料">
           <div class="join-board-head"><strong>直接連線</strong><span>點 IP 就會複製</span></div>
@@ -219,13 +220,19 @@ function homeTemplate() {
       <div class="hero-rule shell" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
     </section>
 
+    <section class="runtime-ribbon shell reveal" aria-label="目前伺服器版本">
+      <div class="runtime-build"><span>WORLD VERSION</span><strong>${escapeHtml(settings.serverVersion)}</strong><small>Java Edition 世界</small></div>
+      <div class="runtime-copy"><span class="runtime-kicker">伺服器實際運行版本</span><h2>現在玩的是 ${escapeHtml(settings.serverVersion)}</h2><p>支援舊版 Java 是為了方便連線；不論使用哪個支援版本，進來後遊玩的都是 ${escapeHtml(settings.serverVersion)} 世界。基岩版玩家也會進入同一個 Java 世界。</p></div>
+      <a class="runtime-link" href="/join" data-link><span>查看連線版本</span><span aria-hidden="true">↗</span></a>
+    </section>
+
     <section class="home-section shell" id="survival">
       <header class="editorial-heading reveal"><div><span class="section-label">伺服器裡做了什麼</span><h2 class="section-title">少做一點重複的事，<br>把時間拿去蓋東西。</h2></div><p class="section-copy">${escapeHtml(settings.pluginSurvivalIntro)} 資源還是要自己找，房子也要自己蓋；這些功能只是讓重複操作少一點。</p></header>
       <div class="feature-ledger">${features}</div>
     </section>
 
     <section class="home-section edition-section shell">
-      <header class="editorial-heading reveal"><div><span class="section-label">大家可以一起玩</span><h2 class="section-title">Java、手機和平板，<br>都會進到同一個世界。</h2></div><p class="section-copy">加入頁已經把 IP、Port 和版本整理好了。選你正在玩的版本，複製那一欄就可以。</p></header>
+      <header class="editorial-heading reveal"><div><span class="section-label">同一個 Java 世界</span><h2 class="section-title">Java、手機和平板，<br>最後都在 ${escapeHtml(settings.serverVersion)} 相遇。</h2></div><p class="section-copy">伺服器核心運行在 Java Edition ${escapeHtml(settings.serverVersion)}。Java 舊版與 Bedrock 都能連入，但世界內容與主要遊玩機制以 Java 版為準。</p></header>
       <div class="edition-ledger reveal">
         <div class="edition-row"><span class="edition-row-icon">${icon("java")}</span><strong>Java Edition</strong><span>建議 ${escapeHtml(settings.javaRecommendedVersions)}</span><code>${escapeHtml(settings.javaAddress)}</code></div>
         <div class="edition-row"><span class="edition-row-icon">${icon("bedrock")}</span><strong>Bedrock Edition</strong><span>建議${escapeHtml(settings.bedrockRecommendedVersion)}</span><code>${escapeHtml(settings.bedrockAddress)}:${escapeHtml(settings.bedrockPort)}</code></div>
@@ -251,11 +258,17 @@ function serverTemplate() {
   return `${pageHero("伺服器介紹", "就是 Minecraft 生存，外加幾個方便的功能。", "這不是 RPG 或模組服。進來就是採集、蓋家、跑圖和慢慢發展，只多了幾個省時間的功能。")}
     <section class="page-content shell">
       <div class="server-overview-grid">
+        <article class="overview-card overview-version reveal"><div class="overview-top"><span class="overview-icon">${icon("version")}</span><span>World build</span></div><div><small>伺服器實際運行</small><strong>${escapeHtml(settings.serverVersion)}</strong><p>Java Edition 世界版本</p></div></article>
         <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("pickaxe")}</span><span>Survival</span></div><strong>Minecraft<br>核心生存</strong></article>
         <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("devices")}</span><span>Cross-play</span></div><strong>Java × Bedrock<br>跨平台加入</strong></article>
         <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("shield")}</span><span>Protection</span></div><strong>遊玩保護<br>降低意外損失</strong></article>
-        <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("version")}</span><span>Version</span></div><strong>目前版本<br>${escapeHtml(settings.serverVersion)}</strong></article>
       </div>
+
+      <section class="version-explainer reveal" aria-labelledby="version-explainer-title">
+        <div class="version-explainer-mark" aria-hidden="true"><span>JAVA</span><strong>${escapeHtml(settings.serverVersion)}</strong></div>
+        <div><span class="eyebrow">版本怎麼看</span><h2 id="version-explainer-title">可用舊版連線，不代表世界是舊版本。</h2><p>柴柴生存實際運行在 Java Edition ${escapeHtml(settings.serverVersion)}。Java 支援 ${escapeHtml(settings.javaSupportedVersions)} 連線，但玩家進入後遊玩的仍是 ${escapeHtml(settings.serverVersion)} 伺服器世界。</p></div>
+        <div class="version-explainer-bedrock"><span>${icon("bedrock")}</span><p><strong>基岩版也在同一個世界。</strong><br>手機、平板或主機加入後，會進入 Java 版伺服器，主要世界規則與遊玩機制以 Java 版為準。</p></div>
+      </section>
 
       <div class="intro-grid single-mode">
         <article class="intro-card reveal"><span class="tag">${icon("pickaxe", "tag-icon")}Minecraft 生存 + 適量便利</span><h2>柴柴生存</h2><p>${escapeHtml(settings.pluginSurvivalIntro)} 你仍然需要自己取得資源、建立基地、探索世界並一步步發展；插件只負責讓操作更順手、遊玩成果更有保障。</p><ul class="feature-list">${listMarkup(["連鎖挖礦與連鎖砍樹，減少大量採集時的重複操作", "防噴保護與防爆保護，降低死亡與爆炸造成的意外損失", "一位玩家睡覺即可跳過夜晚，適合多人伺服器節奏", "支援地毯複製機與 TNT 複製機", "HUD、延遲、TPS 與伺服器資訊顯示", "AFK 保護與伺服器必要管理功能", "加入不破壞主要生存體驗的趣味插件", "Java 與 Bedrock 玩家可以一起遊玩"])}</ul></article>
@@ -273,10 +286,10 @@ function serverTemplate() {
       <div class="independent-note reveal"><span class="note-mark">${icon("shield")}</span><div><strong>專注長期生存體驗</strong><p>這是一個適合持續採集、建造與發展的生存環境。你可以依照自己的節奏遊玩，享受多人世界中的合作、探索與創造。</p></div></div>
 
       <section class="detail-section" aria-labelledby="crossplay-title">
-        <div class="section-heading reveal"><div><span class="eyebrow">04 / 跨平台</span><h2 class="section-title" id="crossplay-title">Java 與 Bedrock 都能加入</h2><p class="section-copy">電腦、手機、平板與支援的遊戲主機玩家，都能使用對應版本的連線資訊加入伺服器。</p></div></div>
+        <div class="section-heading reveal"><div><span class="eyebrow">04 / 跨平台</span><h2 class="section-title" id="crossplay-title">Java 與 Bedrock 都能加入</h2><p class="section-copy">電腦、手機、平板與支援的遊戲主機玩家，都能使用對應連線資訊加入同一個 Java ${escapeHtml(settings.serverVersion)} 世界。</p></div></div>
         <div class="edition-strip">
-          <article class="edition-detail reveal"><div><span class="edition-detail-icon">${icon("java")}</span><span class="tag">Java Edition</span><h3>Java 版</h3><p>支援 ${escapeHtml(settings.javaSupportedVersions)}，建議使用 ${escapeHtml(settings.javaRecommendedVersions)}。</p></div><div class="edition-address"><code>${escapeHtml(settings.javaAddress)}</code><button class="copy-button" type="button" data-copy="${escapeAttr(settings.javaAddress)}">${COPY_ICON}<span>複製 IP</span></button></div></article>
-          <article class="edition-detail bedrock reveal"><div><span class="edition-detail-icon">${icon("bedrock")}</span><span class="tag">Bedrock Edition</span><h3>基岩版</h3><p>建議使用${escapeHtml(settings.bedrockRecommendedVersion)}，連線 Port 為 ${escapeHtml(settings.bedrockPort)}。</p></div><div class="edition-address"><code>${escapeHtml(settings.bedrockAddress)}</code><button class="copy-button" type="button" data-copy="${escapeAttr(settings.bedrockAddress)}">${COPY_ICON}<span>複製 IP</span></button></div></article>
+          <article class="edition-detail reveal"><div><span class="edition-detail-icon">${icon("java")}</span><span class="tag">Java Edition</span><h3>Java 版</h3><p>支援 ${escapeHtml(settings.javaSupportedVersions)} 連線，建議使用 ${escapeHtml(settings.javaRecommendedVersions)}；實際遊玩的世界版本為 ${escapeHtml(settings.serverVersion)}。</p></div><div class="edition-address"><code>${escapeHtml(settings.javaAddress)}</code><button class="copy-button" type="button" data-copy="${escapeAttr(settings.javaAddress)}">${COPY_ICON}<span>複製 IP</span></button></div></article>
+          <article class="edition-detail bedrock reveal"><div><span class="edition-detail-icon">${icon("bedrock")}</span><span class="tag">Bedrock Edition</span><h3>基岩版</h3><p>建議使用${escapeHtml(settings.bedrockRecommendedVersion)}；加入後會進入同一個 Java ${escapeHtml(settings.serverVersion)} 世界。</p></div><div class="edition-address"><code>${escapeHtml(settings.bedrockAddress)}</code><button class="copy-button" type="button" data-copy="${escapeAttr(settings.bedrockAddress)}">${COPY_ICON}<span>複製 IP</span></button></div></article>
         </div>
       </section>
 
@@ -370,9 +383,13 @@ function joinTemplate() {
   const settings = content.settings;
   return `${pageHero("加入伺服器", "你玩哪個版本，就照那一欄加入。", settings.joinIntro)}
     <section class="page-content shell">
+      <section class="join-runtime reveal" aria-label="伺服器運行版本">
+        <div><span>SERVER RUNNING</span><strong>JAVA ${escapeHtml(settings.serverVersion)}</strong></div>
+        <p>支援範圍是「可以用來連線的客戶端版本」。進入後實際遊玩的仍是 Java ${escapeHtml(settings.serverVersion)} 世界，Bedrock 玩家也相同。</p>
+      </section>
       <div class="join-selector">
-        <article class="join-card reveal"><div class="join-card-heading"><span class="join-edition-icon">${icon("java")}</span><div><span class="tag">Java Edition</span><h2>Java 版</h2><p class="edition-note">Minecraft 電腦版玩家</p></div></div><div class="connection-fields">${copyField("伺服器位址", settings.javaAddress, "複製 IP")}<div class="version-grid"><div class="version-item"><span>支援版本</span><strong>${escapeHtml(settings.javaSupportedVersions)}</strong></div><div class="version-item"><span>建議版本</span><strong>${escapeHtml(settings.javaRecommendedVersions)}</strong></div></div></div></article>
-        <article class="join-card bedrock reveal"><div class="join-card-heading"><span class="join-edition-icon">${icon("bedrock")}</span><div><span class="tag">Bedrock Edition</span><h2>基岩版</h2><p class="edition-note">手機、平板、Windows 與遊戲主機玩家</p></div></div><div class="connection-fields">${copyField("伺服器位址", settings.bedrockAddress, "複製 IP")}${copyField("Port", settings.bedrockPort, "複製 Port")}<div class="version-grid"><div class="version-item"><span>建議版本</span><strong>${escapeHtml(settings.bedrockRecommendedVersion)}</strong></div><div class="version-item"><span>連接埠</span><strong>${escapeHtml(settings.bedrockPort)}</strong></div></div></div></article>
+        <article class="join-card reveal"><div class="join-card-heading"><span class="join-edition-icon">${icon("java")}</span><div><span class="tag">Java Edition</span><h2>Java 版</h2><p class="edition-note">Minecraft 電腦版玩家</p></div></div><div class="connection-fields">${copyField("伺服器位址", settings.javaAddress, "複製 IP")}<div class="version-grid"><div class="version-item version-item-primary"><span>實際世界版本</span><strong>${escapeHtml(settings.serverVersion)}</strong></div><div class="version-item"><span>支援連線版本</span><strong>${escapeHtml(settings.javaSupportedVersions)}</strong></div><div class="version-item"><span>建議使用版本</span><strong>${escapeHtml(settings.javaRecommendedVersions)}</strong></div></div></div></article>
+        <article class="join-card bedrock reveal"><div class="join-card-heading"><span class="join-edition-icon">${icon("bedrock")}</span><div><span class="tag">Bedrock Edition</span><h2>基岩版</h2><p class="edition-note">手機、平板、Windows 與遊戲主機玩家</p></div></div><div class="connection-fields">${copyField("伺服器位址", settings.bedrockAddress, "複製 IP")}${copyField("Port", settings.bedrockPort, "複製 Port")}<div class="version-grid"><div class="version-item version-item-primary"><span>進入的世界</span><strong>Java ${escapeHtml(settings.serverVersion)}</strong></div><div class="version-item"><span>建議版本</span><strong>${escapeHtml(settings.bedrockRecommendedVersion)}</strong></div><div class="version-item"><span>連接埠</span><strong>${escapeHtml(settings.bedrockPort)}</strong></div></div></div></article>
       </div>
       <div class="section-heading spaced-heading reveal"><div><span class="eyebrow">加入方法</span><h2 class="section-title">很快就能加入</h2></div></div>
       <div class="join-steps"><article class="step-card reveal"><span class="step-number">01</span><h3>新增伺服器</h3><p>在 Minecraft 多人遊戲頁面選擇新增伺服器。</p></article><article class="step-card reveal"><span class="step-number">02</span><h3>貼上連線資訊</h3><p>複製上方對應版本的 IP；Bedrock 版也要填入 Port。</p></article><article class="step-card reveal"><span class="step-number">03</span><h3>開始生存</h3><p>完成連線後即可開始採集、建造、探索，依照自己的節奏發展。</p></article></div>
