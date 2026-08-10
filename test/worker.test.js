@@ -59,6 +59,18 @@ Deno.test("public content falls back to bundled initial data", async () => {
   assertEquals("vanillaSurvivalIntro" in payload.data.settings, false);
 });
 
+Deno.test("admin responses keep the retired settings key only for older app decoding", async () => {
+  const env = await makeEnv();
+
+  const snapshotResponse = await worker.fetch(adminRequest("/api/admin/snapshot"), env);
+  const snapshotPayload = await snapshotResponse.json();
+  assertEquals(snapshotResponse.status, 200);
+  assertEquals(snapshotPayload.data.settings.vanillaSurvivalIntro, "");
+
+  const publicResponse = await worker.fetch(new Request("https://play.chaihome.cc/api/public/settings"), env);
+  const publicPayload = await publicResponse.json();
+  assertEquals("vanillaSurvivalIntro" in publicPayload.data, false);
+});
 Deno.test("public UI contains no retired mode references", async () => {
   const sources = await Promise.all([
     "public/index.html",

@@ -119,18 +119,18 @@ async function handleAdminApi(request, env, path) {
   if (method !== "GET") enforceRateLimit(request);
 
   if (resource === "snapshot" && method === "GET") {
-    return jsonResponse(request, env, { ok: true, data: await getContent(env, request.url) });
+    return jsonResponse(request, env, { ok: true, data: withLegacyAdminSnapshot(await getContent(env, request.url)) });
   }
 
   if (resource === "settings") {
     if (method === "GET") {
       const content = await getContent(env, request.url);
-      return jsonResponse(request, env, { ok: true, data: content.settings });
+      return jsonResponse(request, env, { ok: true, data: withLegacyAdminSettings(content.settings) });
     }
     if (["PUT", "PATCH"].includes(method)) {
       const body = await readJson(request);
       const result = await updateSettings(env, request.url, body);
-      return jsonResponse(request, env, { ok: true, data: result });
+      return jsonResponse(request, env, { ok: true, data: withLegacyAdminSettings(result) });
     }
     throw new ApiError(405, "METHOD_NOT_ALLOWED", "Settings 支援 GET、PUT 與 PATCH。" );
   }
@@ -363,6 +363,17 @@ function normalizeContent(content) {
     changelog: Array.isArray(content.changelog) ? content.changelog : [],
     updatedAt: content.updatedAt || new Date().toISOString(),
   };
+}
+
+// Older installed builds required this field when decoding ServerSettings.
+// Keep it only on authenticated admin responses so the public website remains
+// a single-survival experience with no retired-mode data or copy.
+function withLegacyAdminSettings(settings = {}) {
+  return { ...settings, vanillaSurvivalIntro: "" };
+}
+
+function withLegacyAdminSnapshot(content) {
+  return { ...content, settings: withLegacyAdminSettings(content.settings) };
 }
 
 async function saveContent(env, content) {
