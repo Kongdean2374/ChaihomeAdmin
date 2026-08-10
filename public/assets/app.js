@@ -12,6 +12,8 @@ const COPY_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8"
 const ARROW_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>`;
 const VOXEL_SCENE = `<div class="hero-world" aria-hidden="true">
   <span class="voxel-sun"></span>
+  <span class="voxel-cloud cloud-one"></span>
+  <span class="voxel-cloud cloud-two"></span>
   <div class="hero-pixels"><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <svg class="voxel-landscape" viewBox="0 0 720 520" role="presentation">
     <defs>
@@ -157,7 +159,7 @@ function updateMeta(title, description, path = location.pathname, type = "websit
 }
 
 function pageHero(eyebrow, title, description) {
-  return `<section class="page-hero"><div class="page-hero-inner shell reveal"><span class="page-index">${escapeHtml(eyebrow)}</span><div><h1 class="display-title">${escapeHtml(title)}</h1><p class="section-copy">${escapeHtml(description)}</p></div></div></section>`;
+  return `<section class="page-hero"><svg class="page-dogmark" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 12 13 5l7 4 7-4 6 7v17l-6 6H13l-6-6Z"/><path class="page-dogmark-face" d="M13 17h4v4h-4zm10 0h4v4h-4zm-6 8h6v4h-6z"/></svg><div class="page-hero-inner shell reveal"><span class="page-index">${escapeHtml(eyebrow)}</span><div><h1 class="display-title">${escapeHtml(title)}</h1><p class="section-copy">${escapeHtml(description)}</p></div></div></section>`;
 }
 
 function copyField(label, value, buttonLabel = "複製") {
@@ -180,28 +182,28 @@ function homeTemplate() {
     : emptyState("目前沒有新消息", "有重要資訊時，我會在這裡告訴你。", true);
 
   const features = [
-    ["01", "pickaxe", "採集少一點重複", "連鎖挖礦與連鎖砍樹，讓大量採集更順手。"],
-    ["02", "shield", "成果多一點保障", "防噴、防爆與 AFK 保護，降低非預期損失。"],
-    ["03", "version", "資訊直接看得到", "HUD、延遲、TPS 與伺服器資訊都能快速確認。"],
-    ["04", "devices", "保留熟悉的玩法", "一人睡覺，並支援地毯與 TNT 複製機；生存核心不變。"],
-  ].map(([number, iconName, title, description]) => `<article class="feature-row reveal"><span class="feature-number">${number}</span><span class="feature-icon">${icon(iconName)}</span><div><h3>${title}</h3><p>${description}</p></div></article>`).join("");
+    ["pickaxe", "一次把礦挖完", "有連鎖挖礦和連鎖砍樹。要蓋大型建築時，不必一直重複做同一個動作。"],
+    ["shield", "意外發生時少一點損失", "防噴、防爆和 AFK 保護都開著；不是無敵，只是不用因為一次斷線整晚重來。"],
+    ["version", "伺服器狀況直接看", "HUD 會顯示延遲、TPS 和必要資訊，不需要另外開網頁查。"],
+    ["devices", "紅石和原版玩法盡量保留", "支援地毯、TNT 複製機與一人睡覺，插件不會把生存變成另一套遊戲。"],
+  ].map(([iconName, title, description]) => `<article class="feature-row reveal"><span class="feature-icon">${icon(iconName)}</span><div><h3>${title}</h3><p>${description}</p></div></article>`).join("");
 
   return `
     <section class="hero">
       ${VOXEL_SCENE}
       <div class="hero-shell shell">
         <div class="hero-copy reveal">
-          <span class="hero-index">CHAIHOME · TAIWAN MINECRAFT SERVER</span>
+          <span class="hero-index">柴柴生存伺服器｜Java、基岩版都能加入</span>
           <h1 class="hero-title"><span>${escapeHtml(settings.serverName)}</span><em>${escapeHtml(settings.tagline)}</em></h1>
-          <p class="hero-subtitle">${escapeHtml(settings.subtitle)}。自己採集、建造、探索與發展，插件只把麻煩的地方整理得更順手。</p>
+          <p class="hero-subtitle">${escapeHtml(settings.subtitle)}。沒有職業、抽卡或複雜養成，還是你熟悉的 Minecraft 生存；插件只處理那些做久了很麻煩的事。</p>
           <div class="hero-actions">
-            <a class="button button-primary" href="/join" data-link>查看加入方式 ${ARROW_ICON}</a>
-            <a class="text-link hero-about" href="/server" data-link>先看看玩法 <span aria-hidden="true">→</span></a>
+            <a class="button button-primary" href="/join" data-link>加入伺服器 ${ARROW_ICON}</a>
+            <a class="text-link hero-about" href="/server" data-link>先看看裡面有什麼 <span aria-hidden="true">→</span></a>
           </div>
-          <div class="hero-notes"><span>版本 ${escapeHtml(settings.serverVersion)}</span><span>Java ${escapeHtml(settings.javaSupportedVersions)}</span><span>Bedrock ${escapeHtml(settings.bedrockRecommendedVersion)}</span></div>
+          <div class="hero-notes"><span>版本 ${escapeHtml(settings.serverVersion)}</span><span>Java ${escapeHtml(settings.javaSupportedVersions)}</span><span>Bedrock ${escapeHtml(settings.bedrockRecommendedVersion)}</span></div><p class="owner-note"><strong>第一次來？</strong> 先去加入頁複製 IP 就好，不用把所有公告看完才進來。</p>
         </div>
         <aside class="join-board reveal" aria-label="伺服器連線資料">
-          <div class="join-board-head"><strong>連線資料</strong><span>點一下即可複製</span></div>
+          <div class="join-board-head"><strong>直接連線</strong><span>點 IP 就會複製</span></div>
           <div class="join-board-row">
             <div class="join-board-edition"><span>${icon("java")}</span><div><small>電腦版</small><strong>Java Edition</strong></div></div>
             <div class="join-board-address"><code>${escapeHtml(settings.javaAddress)}</code><button type="button" data-copy="${escapeAttr(settings.javaAddress)}">複製</button></div>
@@ -211,19 +213,19 @@ function homeTemplate() {
             <div class="join-board-address"><code>${escapeHtml(settings.bedrockAddress)}</code><button type="button" data-copy="${escapeAttr(settings.bedrockAddress)}">複製</button></div>
             <p class="join-board-port">Port <strong>${escapeHtml(settings.bedrockPort)}</strong></p>
           </div>
-          <div class="join-board-foot"><span>JAVA × BEDROCK</span><p>兩個版本的玩家都可以加入同一個生存世界。</p></div>
+          <div class="join-board-foot"><span>同一個世界</span><p>Java 和基岩版玩家進來後會一起玩。</p></div>
         </aside>
       </div>
       <div class="hero-rule shell" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
     </section>
 
     <section class="home-section shell" id="survival">
-      <header class="editorial-heading reveal"><span class="section-number">01</span><div><span class="section-label">伺服器玩法</span><h2 class="section-title">玩的就是生存。<br>只是日常更順手。</h2></div><p class="section-copy">${escapeHtml(settings.pluginSurvivalIntro)} 你依然要自己取得資源、蓋基地、探索世界；便利功能不會替你跳過過程。</p></header>
+      <header class="editorial-heading reveal"><div><span class="section-label">伺服器裡做了什麼</span><h2 class="section-title">少做一點重複的事，<br>把時間拿去蓋東西。</h2></div><p class="section-copy">${escapeHtml(settings.pluginSurvivalIntro)} 資源還是要自己找，房子也要自己蓋；這些功能只是讓重複操作少一點。</p></header>
       <div class="feature-ledger">${features}</div>
     </section>
 
     <section class="home-section edition-section shell">
-      <header class="editorial-heading reveal"><span class="section-number">02</span><div><span class="section-label">跨平台加入</span><h2 class="section-title">你習慣哪個版本，<br>就用哪個版本進來。</h2></div><p class="section-copy">Java 與 Bedrock 玩家都能加入。連線位址、Port 與建議版本整理在加入頁，不需要看一大段教學。</p></header>
+      <header class="editorial-heading reveal"><div><span class="section-label">大家可以一起玩</span><h2 class="section-title">Java、手機和平板，<br>都會進到同一個世界。</h2></div><p class="section-copy">加入頁已經把 IP、Port 和版本整理好了。選你正在玩的版本，複製那一欄就可以。</p></header>
       <div class="edition-ledger reveal">
         <div class="edition-row"><span class="edition-row-icon">${icon("java")}</span><strong>Java Edition</strong><span>建議 ${escapeHtml(settings.javaRecommendedVersions)}</span><code>${escapeHtml(settings.javaAddress)}</code></div>
         <div class="edition-row"><span class="edition-row-icon">${icon("bedrock")}</span><strong>Bedrock Edition</strong><span>建議${escapeHtml(settings.bedrockRecommendedVersion)}</span><code>${escapeHtml(settings.bedrockAddress)}:${escapeHtml(settings.bedrockPort)}</code></div>
@@ -232,7 +234,7 @@ function homeTemplate() {
     </section>
 
     <section class="home-section news-index-section shell">
-      <header class="editorial-heading reveal"><span class="section-number">03</span><div><span class="section-label">伺服器近況</span><h2 class="section-title">最近發生的事</h2></div><p class="section-copy">公告、功能調整與維護資訊會依發布時間保留。最新一筆永遠排在最前面。</p></header>
+      <header class="editorial-heading reveal"><div><span class="section-label">服主最近在忙什麼</span><h2 class="section-title">公告和改動，都記在這裡。</h2></div><p class="section-copy">最新內容排在最上面，舊公告也不會刪掉。伺服器有調整時，可以回來看發生了什麼。</p></header>
       <div class="latest-grid">${cards}</div>
       <a class="plain-cta reveal" href="/news" data-link><span>查看所有消息</span><span aria-hidden="true">↗</span></a>
     </section>`;
@@ -241,12 +243,12 @@ function homeTemplate() {
 function newsCard(item) {
   const isMaintenance = item.type === "maintenance";
   const href = `/${isMaintenance ? "maintenance" : "news"}/${encodeURIComponent(item.slug)}`;
-  return `<a class="news-card reveal" href="${href}" data-link><time class="date" datetime="${escapeAttr(item.publishedAt)}">${formatDate(item.publishedAt)}</time><div class="news-card-main"><span class="tag ${isMaintenance ? "tag-maintenance" : ""}">${icon(isMaintenance ? "wrench" : "news", "tag-icon")}${escapeHtml(isMaintenance ? "維護" : item.category || "最新消息")}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p></div><span class="card-foot">閱讀 <span aria-hidden="true">→</span></span></a>`;
+  return `<a class="news-card reveal" href="${href}" data-link><time class="date" datetime="${escapeAttr(item.publishedAt)}">${formatDate(item.publishedAt)}</time><div class="news-card-main"><span class="tag ${isMaintenance ? "tag-maintenance" : ""}">${icon(isMaintenance ? "wrench" : "news", "tag-icon")}${escapeHtml(isMaintenance ? "維護" : item.category || "最新消息")}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p></div><span class="card-foot">看內容 <span aria-hidden="true">→</span></span></a>`;
 }
 
 function serverTemplate() {
   const settings = content.settings;
-  return `${pageHero("SERVER / 伺服器介紹", "Minecraft 生存，加入適量便利。", "這裡不是 RPG、模組包或高度魔改伺服器。從採集、建造到探索與發展，核心始終是熟悉的 Minecraft 生存。")}
+  return `${pageHero("伺服器介紹", "就是 Minecraft 生存，外加幾個方便的功能。", "這不是 RPG 或模組服。進來就是採集、蓋家、跑圖和慢慢發展，只多了幾個省時間的功能。")}
     <section class="page-content shell">
       <div class="server-overview-grid">
         <article class="overview-card reveal"><div class="overview-top"><span class="overview-icon">${icon("pickaxe")}</span><span>Survival</span></div><strong>Minecraft<br>核心生存</strong></article>
@@ -285,14 +287,14 @@ function serverTemplate() {
 function newsListTemplate() {
   const items = sorted(content.news);
   const list = items.length ? items.map((item) => listCard(item, "news")).join("") : emptyState("還沒有最新消息", "新消息發布後會出現在這裡。");
-  return `${pageHero("NEWS / 最新消息", "最新消息", "伺服器消息、玩法資訊與重要通知都會永久保留在這裡。")}
+  return `${pageHero("最新消息", "最新消息", "我發布過的公告都會留在這裡。新的排在上面，舊的也可以繼續往下找。")}
     <section class="page-content shell"><div class="content-list">${list}</div></section>`;
 }
 
 function maintenanceListTemplate() {
   const items = sorted(content.maintenance);
   const list = items.length ? items.map((item) => listCard(item, "maintenance")).join("") : emptyState("目前沒有維護公告", "預定維護與完成結果會集中顯示在這裡。");
-  return `${pageHero("MAINTENANCE / 維護", "維護公告", "維護時間、原因、影響範圍與完成結果，都會在這裡清楚說明。")}
+  return `${pageHero("維護公告", "維護公告", "如果要關服維護，我會先把時間和影響寫在這裡；完成後也會補上結果。")}
     <section class="page-content shell"><div class="content-list">${list}</div></section>`;
 }
 
@@ -351,7 +353,7 @@ function renderRichText(value) {
 function changelogTemplate() {
   const items = sorted(content.changelog, "date");
   const timeline = items.length ? `<div class="timeline">${items.map(changelogEntry).join("")}</div>` : emptyState("還沒有更新紀錄", "新的伺服器變更會持續保留在這裡。");
-  return `${pageHero("CHANGELOG / 更新", "更新紀錄", "從新功能到問題修復，每一次調整都有跡可循。")}
+  return `${pageHero("更新紀錄", "更新紀錄", "加了什麼、改了什麼、修了哪些問題，我會按日期記下來。")}
     <section class="page-content shell">${timeline}</section>`;
 }
 
@@ -366,7 +368,7 @@ function changelogEntry(item) {
 
 function joinTemplate() {
   const settings = content.settings;
-  return `${pageHero("JOIN / 加入遊戲", "選擇你的版本，開始生存。", settings.joinIntro)}
+  return `${pageHero("加入伺服器", "你玩哪個版本，就照那一欄加入。", settings.joinIntro)}
     <section class="page-content shell">
       <div class="join-selector">
         <article class="join-card reveal"><div class="join-card-heading"><span class="join-edition-icon">${icon("java")}</span><div><span class="tag">Java Edition</span><h2>Java 版</h2><p class="edition-note">Minecraft 電腦版玩家</p></div></div><div class="connection-fields">${copyField("伺服器位址", settings.javaAddress, "複製 IP")}<div class="version-grid"><div class="version-item"><span>支援版本</span><strong>${escapeHtml(settings.javaSupportedVersions)}</strong></div><div class="version-item"><span>建議版本</span><strong>${escapeHtml(settings.javaRecommendedVersions)}</strong></div></div></div></article>
@@ -378,7 +380,7 @@ function joinTemplate() {
 }
 
 function contactTemplate() {
-  return `${pageHero("CONTACT / 聯絡", "需要幫忙？從這裡找到我。", "伺服器問題、加入協助或其他聯繫，建議先使用個人自介頁中的聯絡方式；也可以加入 Discord 與玩家交流。")}
+  return `${pageHero("聯絡方式", "找我、回報問題，或來 Discord 聊天。", "平常比較建議從自介頁或 Discord 找我。Email 有留，但我真的不常看。")}
     <section class="page-content shell">
       <div class="contact-grid">
         <article class="contact-card contact-primary reveal"><div><span class="tag">建議聯絡方式</span><span class="contact-icon">${icon("profile")}</span><h2>個人自介與聯絡入口</h2><p>我的自我介紹頁整理了目前較常使用的聯絡方式。若希望較快收到回覆，建議優先從這裡找到我。</p></div><a class="button button-primary" href="https://me.chaihome.cc" target="_blank" rel="noreferrer">前往 me.chaihome.cc ${ARROW_ICON}</a></article>
