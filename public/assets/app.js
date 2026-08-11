@@ -334,8 +334,8 @@ function articleTemplate(item, type) {
 
 function maintenanceFacts(item) {
   const facts = [
-    ["預計開始", item.startAt ? formatDate(item.startAt, true) : "未指定"],
-    ["預計結束", item.endAt ? formatDate(item.endAt, true) : "未指定"],
+    ["預計開始（UTC+8）", item.startAt ? formatDate(item.startAt, true) : "未指定"],
+    ["預計結束（UTC+8）", item.endAt ? formatDate(item.endAt, true) : "未指定"],
     ["玩家影響", item.impact || "請以文章說明為準"],
     ["是否需重新登入", item.requiresRelogin === true ? "需要" : item.requiresRelogin === false ? "不需要" : "請以文章說明為準"],
   ];

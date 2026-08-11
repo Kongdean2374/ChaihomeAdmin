@@ -266,6 +266,19 @@ enum AppFormatters {
         return formatter.string(from: date)
     }
 
+    static func taipeiDateTime(_ isoString: String) -> String {
+        let parser = ISO8601DateFormatter()
+        parser.formatOptions = [.withInternetDateTime]
+        guard let date = parser.date(from: isoString) else { return isoString }
+
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "zh_TW")
+        formatter.timeZone = TimeZone(identifier: "Asia/Taipei")
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        return formatter.string(from: date)
+    }
+
     static func listItems(_ text: String) -> [String] {
         text
             .split(whereSeparator: \.isNewline)

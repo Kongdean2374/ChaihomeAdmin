@@ -34,8 +34,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: cc.chaihome.admin
         PRODUCT_NAME: ChaihomeAdmin
         PRODUCT_MODULE_NAME: ChaihomeAdmin
-        MARKETING_VERSION: "1.0.1"
-        CURRENT_PROJECT_VERSION: "2"
+        MARKETING_VERSION: "1.0.2"
+        CURRENT_PROJECT_VERSION: "3"
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: "柴柴官網管理"
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"

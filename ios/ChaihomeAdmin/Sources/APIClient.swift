@@ -225,11 +225,13 @@ final class AppModel: ObservableObject {
         guard published else { return false }
         let slug = created?.slug.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
         let items = request.items.map { "• \($0)" }.joined(separator: "\n")
+        let startAt = AppFormatters.taipeiDateTime(request.startAt)
+        let endAt = AppFormatters.taipeiDateTime(request.endAt)
         let description = """
         \(request.summary)
 
-        開始：\(request.startAt)
-        預計結束：\(request.endAt)
+        開始：\(startAt)（台北時間 UTC+8）
+        預計結束：\(endAt)（台北時間 UTC+8）
         原因：\(request.reason)
         玩家影響：\(request.impact)
 
