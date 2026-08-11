@@ -43,8 +43,12 @@ struct NewsForm: View {
             PrimaryActionButton(
                 title: "發布最新消息",
                 symbol: "paperplane.fill",
-                disabled: !isValid || model.isBusy
+                disabled: model.isBusy
             ) {
+                guard validationIssues.isEmpty else {
+                    presentValidationIssues(validationIssues, on: model)
+                    return
+                }
                 let request = NewsCreateRequest(
                     title: title.trimmed,
                     summary: summary.trimmed,
@@ -58,12 +62,16 @@ struct NewsForm: View {
                 }
             }
         } footer: {
-            Text("發布成功後會立即出現在官網，不需要重新部署。")
+            Text("必填：標題至少 2 個字、摘要至少 5 個字、文章內文至少 10 個字。若有缺少，按下發布會直接告訴你。")
         }
     }
 
-    private var isValid: Bool {
-        title.trimmed.count >= 2 && summary.trimmed.count >= 5 && content.trimmed.count >= 10
+    private var validationIssues: [String] {
+        var issues: [String] = []
+        if title.trimmed.count < 2 { issues.append("標題至少需要 2 個字") }
+        if summary.trimmed.count < 5 { issues.append("簡短摘要至少需要 5 個字") }
+        if content.trimmed.count < 10 { issues.append("文章內文至少需要 10 個字") }
+        return issues
     }
 
     private func reset() {
@@ -95,6 +103,11 @@ struct MaintenanceForm: View {
             TextField("簡短摘要", text: $summary, axis: .vertical)
                 .lineLimit(2...4)
             DatePicker("開始時間", selection: $startAt)
+                .onChange(of: startAt) { _, newStart in
+                    if endAt < newStart {
+                        endAt = newStart.addingTimeInterval(3600)
+                    }
+                }
             DatePicker("預計結束", selection: $endAt, in: startAt...)
             Toggle("完成後需要重新登入", isOn: $requiresRelogin)
         }
@@ -130,8 +143,12 @@ struct MaintenanceForm: View {
             PrimaryActionButton(
                 title: "發布維護公告",
                 symbol: "wrench.and.screwdriver.fill",
-                disabled: !isValid || model.isBusy
+                disabled: model.isBusy
             ) {
+                guard validationIssues.isEmpty else {
+                    presentValidationIssues(validationIssues, on: model)
+                    return
+                }
                 let request = MaintenanceCreateRequest(
                     title: title.trimmed,
                     summary: summary.trimmed,
@@ -150,11 +167,18 @@ struct MaintenanceForm: View {
                     if await model.publishMaintenance(request) { reset() }
                 }
             }
+        } footer: {
+            Text("必填：標題至少 2 個字、摘要至少 5 個字、完整公告內容至少 10 個字，結束時間不可早於開始時間。按下發布會顯示尚缺項目。")
         }
     }
 
-    private var isValid: Bool {
-        title.trimmed.count >= 2 && summary.trimmed.count >= 5 && content.trimmed.count >= 10 && endAt >= startAt
+    private var validationIssues: [String] {
+        var issues: [String] = []
+        if title.trimmed.count < 2 { issues.append("維護公告標題至少需要 2 個字") }
+        if summary.trimmed.count < 5 { issues.append("簡短摘要至少需要 5 個字") }
+        if content.trimmed.count < 10 { issues.append("完整公告內容至少需要 10 個字") }
+        if endAt < startAt { issues.append("預計結束時間不可早於開始時間") }
+        return issues
     }
 
     private func reset() {
@@ -208,8 +232,12 @@ struct ChangelogForm: View {
             PrimaryActionButton(
                 title: "新增更新紀錄",
                 symbol: "clock.badge.checkmark",
-                disabled: !isValid || model.isBusy
+                disabled: model.isBusy
             ) {
+                guard validationIssues.isEmpty else {
+                    presentValidationIssues(validationIssues, on: model)
+                    return
+                }
                 let request = ChangelogCreateRequest(
                     date: AppFormatters.dateOnly(date),
                     version: version.trimmed,
@@ -225,12 +253,17 @@ struct ChangelogForm: View {
                     if await model.publishChangelog(request) { reset() }
                 }
             }
+        } footer: {
+            Text("必填：更新標題至少 2 個字，並在新增、改善、修復或其他類型中填寫至少一項。按下發布會顯示尚缺項目。")
         }
     }
 
-    private var isValid: Bool {
+    private var validationIssues: [String] {
+        var issues: [String] = []
         let hasChanges = [added, improved, adjusted, fixed, removed, technical].contains { !$0.trimmed.isEmpty }
-        return title.trimmed.count >= 2 && hasChanges
+        if title.trimmed.count < 2 { issues.append("更新標題至少需要 2 個字") }
+        if !hasChanges { issues.append("至少需要填寫一項變更內容") }
+        return issues
     }
 
     private func reset() {
@@ -245,6 +278,14 @@ struct ChangelogForm: View {
         showOtherTypes = false
         date = Date()
     }
+}
+
+@MainActor
+private func presentValidationIssues(_ issues: [String], on model: AppModel) {
+    model.presentedAlert = AppAlert(
+        title: "還不能發布",
+        message: issues.map { "• \($0)" }.joined(separator: "\n")
+    )
 }
 
 extension String {
