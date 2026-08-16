@@ -354,9 +354,27 @@ async function getContent(env, requestUrl) {
 }
 
 function normalizeContent(content) {
+  const settings = { ...(content.settings || {}) };
+
+  // One-time compatibility migration for the previous public connection details.
+  // Values saved later from the admin app are left untouched.
+  const usesPreviousAddresses =
+    settings.javaAddress === "chaihome.cc" &&
+    settings.bedrockAddress === "bedrock.chaihome.cc" &&
+    Number(settings.bedrockPort) === 55550;
+
+  if (usesPreviousAddresses) {
+    Object.assign(settings, {
+      subtitle: "支援 Java／基岩版跨平台遊玩",
+      javaAddress: "chaimc.chaihome.cc",
+      bedrockAddress: "mc.chaihome.cc",
+      bedrockPort: 10029,
+    });
+  }
+
   return {
     schemaVersion: 1,
-    settings: content.settings || {},
+    settings,
     ticker: content.ticker || { enabled: false, type: "news", slug: "", summary: "" },
     news: Array.isArray(content.news) ? content.news : [],
     maintenance: Array.isArray(content.maintenance) ? content.maintenance : [],
@@ -364,7 +382,6 @@ function normalizeContent(content) {
     updatedAt: content.updatedAt || new Date().toISOString(),
   };
 }
-
 // Older installed builds required this field when decoding ServerSettings.
 // Keep it only on authenticated admin responses so the public website remains
 // a single-survival experience with no retired-mode data or copy.

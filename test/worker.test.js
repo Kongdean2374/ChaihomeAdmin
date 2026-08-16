@@ -53,12 +53,28 @@ Deno.test("public content falls back to bundled initial data", async () => {
   const payload = await response.json();
   assertEquals(response.status, 200);
   assert(payload.ok);
-  assertEquals(payload.data.settings.javaAddress, "chaihome.cc");
-  assertEquals(payload.data.settings.bedrockAddress, "bedrock.chaihome.cc");
-  assertEquals(payload.data.settings.bedrockPort, 55500);
+  assertEquals(payload.data.settings.javaAddress, "chaimc.chaihome.cc");
+  assertEquals(payload.data.settings.bedrockAddress, "mc.chaihome.cc");
+  assertEquals(payload.data.settings.bedrockPort, 10029);
   assertEquals("vanillaSurvivalIntro" in payload.data.settings, false);
 });
 
+Deno.test("legacy connection settings migrate to the current addresses", async () => {
+  const env = await makeEnv();
+  const legacy = JSON.parse(await Deno.readTextFile(new URL("public/data/default-content.json", ROOT)));
+  legacy.settings.subtitle = "Java × Bedrock 跨平台遊玩";
+  legacy.settings.javaAddress = "chaihome.cc";
+  legacy.settings.bedrockAddress = "bedrock.chaihome.cc";
+  legacy.settings.bedrockPort = 55550;
+  await env.CONTENT.put("content:v1", JSON.stringify(legacy));
+
+  const response = await worker.fetch(new Request("https://play.chaihome.cc/api/public/settings"), env);
+  const payload = await response.json();
+  assertEquals(payload.data.subtitle, "支援 Java／基岩版跨平台遊玩");
+  assertEquals(payload.data.javaAddress, "chaimc.chaihome.cc");
+  assertEquals(payload.data.bedrockAddress, "mc.chaihome.cc");
+  assertEquals(payload.data.bedrockPort, 10029);
+});
 Deno.test("admin responses keep the retired settings key only for older app decoding", async () => {
   const env = await makeEnv();
 
